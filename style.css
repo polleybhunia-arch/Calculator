@@ -1,0 +1,91 @@
+/* Reset and base page styling */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1f2028;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  padding: 16px;
+}
+
+.calculator {
+  width: 100%;
+  max-width: 340px;
+  background: #2b2d3a;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.display {
+  background: #14151c;
+  color: #ffffff;
+  font-size: 2.5rem;
+  text-align: right;
+  padding: 20px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.btn {
+  padding: 18px 0;
+  font-size: 1.25rem;
+  border: none;
+  border-radius: 10px;
+  background: #3b3e52;
+  color: #ffffff;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.05s ease;
+}
+
+.btn:hover {
+  filter: brightness(1.15);
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn-operator {
+  background: #4d5478;
+}
+
+.btn-clear,
+.btn-delete {
+  background: #6b6f8a;
+}
+
+.btn-equals {
+  background: #e0902f;
+  grid-row: span 2;
+}
+
+.btn-zero {
+  grid-column: span 2;
+}
+
+/* Small screens: keep buttons easy to tap */
+@media (max-width: 360px) {
+  .display {
+    font-size: 2rem;
+  }
+
+  .btn {
+    padding: 16px 0;
+    font-size: 1.1rem;
+  }
+}
