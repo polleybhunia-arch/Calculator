@@ -1,10 +1,21 @@
 // Calculator state
-let currentInput = '0';   // value currently shown on the display
-let previousInput = null; // operand stored before an operator was chosen
-let operator = null;      // pending operator: '+', '-', '*', '/'
-let resetOnNextInput = false; // true right after "=" or after choosing an operator
+let currentInput = '0';        // value of the operand currently being typed
+let previousInput = null;      // operand stored before an operator was chosen
+let operator = null;           // pending operator: '+', '-', '*', '/'
+let resetOnNextInput = false;  // true right after choosing an operator (next digit starts a new number)
+let history = [];              // committed tokens (typed numbers + operator symbols) for the expression trail
+let justCalculated = false;    // true right after "=" until a new number/operator is entered
+let lastExpression = '';       // the full expression shown on the small line after "="
 
-const display = document.getElementById('display');
+const operatorSymbols = {
+  '+': '+',
+  '-': '−',
+  '*': '×',
+  '/': '÷',
+};
+
+const expressionDisplay = document.getElementById('display-expression');
+const currentDisplay = document.getElementById('display-current');
 const buttons = document.querySelector('.buttons');
 
 updateDisplay();
@@ -21,14 +32,19 @@ buttons.addEventListener('click', (event) => {
   } else if (button.dataset.action === 'delete') {
     deleteLastDigit();
   } else if (button.dataset.action === 'equals') {
-    calculate();
+    equals();
   }
 
   updateDisplay();
 });
 
 function appendNumber(number) {
-  // Start a fresh number after an operator or an "=" result
+  // A fresh number after a result or an error starts a brand new calculation
+  if (currentInput === 'Error' || justCalculated) {
+    clearAll();
+  }
+
+  // Start a fresh number after an operator
   if (resetOnNextInput) {
     currentInput = '0';
     resetOnNextInput = false;
@@ -48,22 +64,37 @@ function appendNumber(number) {
 }
 
 function chooseOperator(nextOperator) {
-  // Recover from an Error state instead of letting it flow into the next calculation
   if (currentInput === 'Error') {
     clearAll();
   }
 
-  // Chain calculations: resolve the pending operation before starting the next one
-  if (operator !== null && !resetOnNextInput) {
-    calculate();
+  if (justCalculated) {
+    // Continue the next calculation from the previous result
+    history = [currentInput];
+    justCalculated = false;
+  } else if (resetOnNextInput) {
+    // Pressed an operator again without typing a number: swap it instead of appending
+    history[history.length - 1] = operatorSymbols[nextOperator];
+    operator = nextOperator;
+    return;
+  } else {
+    history.push(currentInput);
   }
 
+  // Chain calculations: resolve the pending operation before starting the next one
+  if (operator !== null) {
+    computeResult();
+  }
+
+  history.push(operatorSymbols[nextOperator]);
   previousInput = currentInput;
   operator = nextOperator;
   resetOnNextInput = true;
 }
 
-function calculate() {
+// Resolves previousInput <operator> currentInput into currentInput. Used both
+// for mid-expression chaining and as the final step of equals().
+function computeResult() {
   if (operator === null || previousInput === null) {
     return;
   }
@@ -103,6 +134,21 @@ function calculate() {
   resetOnNextInput = true;
 }
 
+function equals() {
+  if (operator === null || previousInput === null) {
+    return;
+  }
+
+  // Capture the full typed expression before computeResult() overwrites currentInput
+  const fullExpression = history.join('') + currentInput;
+
+  computeResult();
+
+  lastExpression = fullExpression;
+  history = [];
+  justCalculated = true;
+}
+
 function deleteLastDigit() {
   if (resetOnNextInput || currentInput === 'Error') {
     clearAll();
@@ -120,8 +166,20 @@ function clearAll() {
   previousInput = null;
   operator = null;
   resetOnNextInput = false;
+  history = [];
+  justCalculated = false;
+  lastExpression = '';
 }
 
 function updateDisplay() {
-  display.textContent = currentInput;
+  if (justCalculated) {
+    // Two-line result view: expression trail on top, bold answer below
+    expressionDisplay.textContent = lastExpression;
+    currentDisplay.textContent = currentInput;
+  } else {
+    // Live view: growing expression trail on the main line while typing
+    expressionDisplay.textContent = '';
+    const liveExpression = history.join('') + (resetOnNextInput ? '' : currentInput);
+    currentDisplay.textContent = liveExpression === '' ? '0' : liveExpression;
+  }
 }

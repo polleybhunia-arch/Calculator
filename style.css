@@ -26,11 +26,26 @@ body {
 .display {
   background: #14151c;
   color: #ffffff;
-  font-size: 2.5rem;
   text-align: right;
-  padding: 20px 16px;
+  padding: 16px 16px 20px;
   border-radius: 10px;
   margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.display-expression {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.55);
+  min-height: 1.5rem;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.display-current {
+  font-size: 2.5rem;
+  font-weight: 700;
   overflow-x: auto;
   white-space: nowrap;
 }
@@ -80,8 +95,12 @@ body {
 
 /* Small screens: keep buttons easy to tap */
 @media (max-width: 360px) {
-  .display {
+  .display-current {
     font-size: 2rem;
+  }
+
+  .display-expression {
+    font-size: 1rem;
   }
 
   .btn {
