@@ -1,7 +1,7 @@
 ---
 id: CALC-001
 title: Show Error immediately when a divide-by-zero is resolved by an operator press
-status: PLANNED
+status: IN_PROGRESS
 tier: T1
 depends_on: BOOT-001
 base_ref:
@@ -79,6 +79,12 @@ same subsequent behavior — and the pressed operator is discarded.
   (e.g. `5 ÷ 0 +`), matching the implemented behavior.
 
 ## Required Tests
+*Placement update 2026-09-21 (orchestrator, see `.agent/units/CALC-001.matrix.md` "Why new files" and
+`.agent/decisions/D-006`, `D-007`): the new tests live in **new files**, not as additions to existing
+ones, because `validate.mjs state` treats any modification of a pre-existing test file as a test
+change: `tests/unit/divide-by-zero.test.js`, `tests/integration/divide-by-zero-click.test.js`,
+`tests/regression/divide-by-zero.test.js`. Where the bullets below say "extended", read "new file".*
+
 - **Unit** (`tests/unit/calculator-core.test.js`, extended with new named rows — RED first):
   AC-1…AC-4 against the pure core; each new test must **fail on the post-`BOOT-001` core** for
   the documented reason (it renders `5÷0+` / no `Error`) and pass after the fix. Cover: each of
@@ -167,3 +173,5 @@ Standard DoD (CLAUDE.md §12) plus:
 
 ## Log
 - 2026-09-21T03:53:52Z | NEW -> PLANNED | planner@claude-opus-5 | created from .agent/handoffs/PLAN-03-orchestrator-to-planner.md (user decision OQ-B1: separate fix unit); depends on BOOT-001; OQ-C1 open
+- 2026-09-21T18:13:20Z | PLANNED -> READY | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): gate 2 passed; matrix .agent/units/CALC-001.matrix.md by test-designer@claude-sonnet-5 (handoffs CALC-001-01, CALC-001-02), 21 new named rows plus 21 existing guards; OQ-C1 and OQ-C2 resolved by the user; BOOT-001 COMPLETE (dependency met); the test-designer also added the missing traceability row to the BOOT-001 matrix
+- 2026-09-21T18:13:21Z | READY -> IN_PROGRESS | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): branch agent/CALC-001-midchain-divide-by-zero created on top of the completed BOOT-001 branch; stage order per .agent/decisions/D-006-calc001-stage-order.md (integration-tester RED tests first, implementer fix, documenter README last); registry change covered by D-007; RED rows are expected to fail on the unmodified core, GUARD rows to pass
