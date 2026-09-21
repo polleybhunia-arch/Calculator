@@ -1,7 +1,7 @@
 ---
 id: BOOT-001
 title: Characterize current behavior and extract a testable calculator core
-status: READY
+status: IN_PROGRESS
 tier: T2
 depends_on:
 base_ref:
@@ -183,3 +183,4 @@ Standard DoD (CLAUDE.md §12) plus:
 ## Log
 - 2026-09-21T03:18:17Z | NEW -> PLANNED | planner@claude-opus-5 | created from .agent/plan.md (keyboard input, T2); OQ-6/OQ-7 open
 - 2026-09-21T04:19:22Z | PLANNED -> READY | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): gate 2 passed; matrix .agent/units/BOOT-001.matrix.md by test-designer@claude-sonnet-5 (handoffs BOOT-001-02, BOOT-001-04); OQ-6, OQ-B1..B3 resolved by user; OQ-7 (lint) deferred to gate 8
+- 2026-09-21T06:39:20Z | READY -> IN_PROGRESS | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): branch agent/BOOT-001-core-extraction at 1180f5a, tree clean; stage order per .agent/decisions/D-002-boot001-stage-order.md (integration-tester safety net first, then implementer); characterization safety-net rows are green-from-start by design, not a false RED
