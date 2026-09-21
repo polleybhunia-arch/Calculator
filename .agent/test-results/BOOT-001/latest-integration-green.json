@@ -1,0 +1,15 @@
+{
+  "unit": "BOOT-001",
+  "gate": "integration",
+  "phase": "green",
+  "command": "node --test \"tests/integration/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "d9bd52bc4fbc958913f174b1bcd1da912ded9c87",
+  "dirty": false,
+  "timestamp": "2026-09-21T07:53:59.001Z",
+  "tests": 19,
+  "pass": 19,
+  "fail": 0,
+  "outputTail": "✔ shows an empty expression line and 0 when the page loads (6.0539ms)\n✔ runs every script tag of index.html in document order without module syntax (4.874ms)\n✔ wires every digit button 0 to 9 to the main line (3.2645ms)\n✔ ignores a second decimal point typed through the buttons (2.2299ms)\n✔ shows the display symbol for each operator button (5.1458ms)\n✔ AC clears an unfinished chain, a result and an Error (4.7637ms)\n✔ DEL removes the last typed digit (2.0897ms)\n✔ DEL right after an operator clears the whole calculation on the page (2.0382ms)\n✔ DEL on Error clears it on the page (1.6263ms)\n✔ a second operator press replaces the first on the page (1.8934ms)\n✔ equals with no pending operator changes nothing on the page (2.2108ms)\n✔ equals right after an operator uses the held value as the second operand on the page (1.218ms)\n✔ a digit after a result starts a new calculation on the page (2.0772ms)\n✔ an operator after Error clears first and starts from 0 on the page (1.9509ms)\n✔ leading zeros are replaced and a zero before a point is kept on the page (2.5395ms)\n✔ a decimal point after an operator starts 0. in the next operand on the page (1.8073ms)\n✔ clicking the button container outside any button changes nothing (1.7009ms)\n✔ updates the display through textContent without writing markup (1.8853ms)\n✔ treats a button data attribute containing markup as inert text (2.2375ms)\nℹ tests 19\nℹ suites 0\nℹ pass 19\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 173.8941\n",
+  "passed": true
+}
