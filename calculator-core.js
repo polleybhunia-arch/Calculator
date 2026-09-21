@@ -68,6 +68,11 @@
     // Chain calculations: resolve the pending operation (if any) before starting the next one
     const resolved = computeResult(committed);
 
+    if (resolved.currentInput === ERROR_TEXT) {
+      // A divide-by-zero ends the calculation exactly as '=' does, and the pressed operator is discarded
+      return { ...resolved, lastExpression: committed.history.join(''), history: [], justCalculated: true };
+    }
+
     return {
       ...resolved,
       history: [...resolved.history, symbol],
