@@ -70,7 +70,7 @@
 
     if (resolved.currentInput === ERROR_TEXT) {
       // A divide-by-zero ends the calculation exactly as '=' does, and the pressed operator is discarded
-      return { ...resolved, lastExpression: committed.history.join(''), history: [], justCalculated: true };
+      return finishCalculation(resolved, committed.history.join(''));
     }
 
     return {
@@ -101,6 +101,12 @@
     return { ...settled, currentInput: String(Math.round(result * ROUNDING_FACTOR) / ROUNDING_FACTOR) };
   }
 
+  // Shows the two-line result view for a resolved calculation. Shared by '=' and by an operator
+  // press that hits a divide-by-zero, so the two paths cannot drift apart.
+  function finishCalculation(resolved, expression) {
+    return { ...resolved, lastExpression: expression, history: [], justCalculated: true };
+  }
+
   function equals(state) {
     if (state.operator === null || state.previousInput === null) {
       return state;
@@ -109,7 +115,7 @@
     // Capture the full typed expression before computeResult() overwrites currentInput
     const fullExpression = state.history.join('') + state.currentInput;
 
-    return { ...computeResult(state), lastExpression: fullExpression, history: [], justCalculated: true };
+    return finishCalculation(computeResult(state), fullExpression);
   }
 
   function deleteLastDigit(state) {
