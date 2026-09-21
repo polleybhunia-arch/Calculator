@@ -1,0 +1,15 @@
+{
+  "unit": "BOOT-001",
+  "gate": "unit",
+  "phase": "red",
+  "command": "node --test \"tests/unit/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "a08f8c61b77202e3eacf2771f7ebb8f9a3005249",
+  "dirty": false,
+  "timestamp": "2026-09-21T13:23:10.978Z",
+  "tests": 51,
+  "pass": 0,
+  "fail": 51,
+  "outputTail": "  AssertionError [ERR_ASSERTION]: AC-1: calculator-core.js must exist at the repository root\n      at assertCoreFileExists (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:27:10)\n      at core (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:31:3)\n      at fresh (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:53:21)\n      at run (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:61:31)\n      at expectRun (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:68:17)\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:389:3)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at tests\\unit\\calculator-core.test.js:393:1\n✖ ignores a second equals after a result (0.0982ms)\n  AssertionError [ERR_ASSERTION]: AC-1: calculator-core.js must exist at the repository root\n      at assertCoreFileExists (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:27:10)\n      at core (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:31:3)\n      at fresh (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:53:21)\n      at run (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:61:31)\n      at expectRun (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:68:17)\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\calculator-core.test.js:394:3)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+  "passed": false
+}
