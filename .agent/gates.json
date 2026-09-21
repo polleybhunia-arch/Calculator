@@ -1,0 +1,12 @@
+{
+  "_comment": "Single source of truth for gate commands (CLAUDE.md links here, it does not restate them). Run via `node .agent/tools/run-gate.mjs <gate> --unit <ID>`. `na` requires a written reason; a gate that is neither runnable nor N/A blocks work rather than being skipped. min_tests rejects vacuous passes. Rationale for N/A entries: .agent/decisions/D-001-toolchain.md.",
+  "test_paths": ["tests"],
+  "gates": {
+    "unit": { "command": "node --test \"tests/unit/**/*.test.js\"", "min_tests": 1 },
+    "integration": { "command": "node --test \"tests/integration/**/*.test.js\"", "min_tests": 1 },
+    "regression": { "command": "node --test \"tests/regression/**/*.test.js\"", "min_tests": 1 },
+    "lint": { "command": "node --check script.js" },
+    "typecheck": { "na": "plain JavaScript, no type checker in a zero-dependency project (D-001)" },
+    "build": { "na": "no build step; index.html loads script.js directly (D-001)" }
+  }
+}

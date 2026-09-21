@@ -1,0 +1,3 @@
+# Timestamped gate-run history is noise; the latest-*.json files (bound to a commit SHA) are the evidence and ARE committed.
+.agent/test-results/*/*-20*.json
+node_modules/

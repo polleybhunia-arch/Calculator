@@ -1,0 +1,6 @@
+{
+  "_comment": "Model assignment is part of each agent's contract. Change only by explicit user decision. FALLBACK (user decision): if an Opus agent's model is UNAVAILABLE (not accessible/enabled, or still failing after 2 retries on the same model), the orchestrator may re-run it on Sonnet. Never for latency, cost or token reasons. It must be logged on the unit Log line as `FALLBACK(opus->sonnet): <reason>`; a Sonnet review additionally sets `review_fallback: <reason>` and the completion evidence is labelled REDUCED ASSURANCE. Sonnet-family agents have no fallback: unavailable => BLOCKED. Enforced by .agent/tools/validate.mjs.",
+  "opus": ["orchestrator", "planner", "reviewer", "security-reviewer", "architecture-reviewer"],
+  "sonnet": ["test-designer", "implementer", "integration-tester", "debugger", "documenter", "refactorer"],
+  "fallback": { "opus": "sonnet" }
+}

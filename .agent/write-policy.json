@@ -1,0 +1,36 @@
+{
+  "_comment": "Write-ownership matrix enforced by .claude/hooks/write-guard.mjs (PreToolUse on Write/Edit). Deny beats allow. always_deny is governance + machine-generated evidence: only the human edits these, or a tool writes them via Bash. Roles not listed here are only kept off always_deny paths. Paths are project-relative, forward slashes.",
+  "always_deny": [
+    ".git/**",
+    "CLAUDE.md",
+    ".claude/**",
+    ".agent/model-policy.json",
+    ".agent/write-policy.json",
+    ".agent/gates.json",
+    ".agent/tools/**",
+    ".agent/templates/**",
+    ".agent/test-results/**",
+    ".agent/state.md"
+  ],
+  "roles": {
+    "orchestrator": { "allow": [".agent/**"] },
+    "planner": { "allow": [".agent/plan.md", ".agent/units/**", ".agent/decisions/**", ".agent/handoffs/**"] },
+    "test-designer": { "allow": [".agent/units/*.matrix.md", ".agent/handoffs/**"] },
+    "implementer": {
+      "allow": ["**"],
+      "deny": [".agent/units/**", ".agent/reviews/**", ".agent/diagnoses/**", ".agent/plan.md"]
+    },
+    "refactorer": {
+      "allow": ["**"],
+      "deny": ["tests/**", ".agent/units/**", ".agent/reviews/**", ".agent/diagnoses/**", ".agent/plan.md", ".agent/decisions/**"]
+    },
+    "reviewer": { "allow": [".agent/reviews/**", ".agent/handoffs/**"] },
+    "security-reviewer": { "allow": [".agent/reviews/**", ".agent/handoffs/**"] },
+    "architecture-reviewer": { "allow": [".agent/reviews/**", ".agent/decisions/**", ".agent/handoffs/**"] },
+    "integration-tester": {
+      "allow": ["tests/integration/**", "tests/regression/**", "tests/helpers/**", ".agent/decisions/**", ".agent/handoffs/**"]
+    },
+    "debugger": { "allow": [".agent/diagnoses/**", ".agent/handoffs/**"] },
+    "documenter": { "allow": ["docs/**", "README.md", ".agent/handoffs/**"] }
+  }
+}
