@@ -121,6 +121,35 @@ test('leaves an earlier state unchanged when a later input is applied', () => {
   expectDisplay(s2, '', '7+', 's2');
 });
 
+// Not a matrix row: the matrix leaves the unrecognized-input policy to the implementer. D-003
+// chooses "throw", per CLAUDE.md section 4 (invariant violations throw; the DOM layer is the
+// boundary that filters user-derived data before it reaches the core).
+test('throws a TypeError for a malformed input descriptor', () => {
+  const { applyInput } = core();
+  const state = run('4 +');
+  const malformed = [
+    null,
+    undefined,
+    'number',
+    42,
+    {},
+    { type: 'bogus', value: '1' },
+    { type: 'number' },
+    { type: 'number', value: '12' },
+    { type: 'number', value: 7 },
+    { type: 'number', value: 'a' },
+    { type: 'operator', value: '^' },
+    { type: 'operator', value: 'constructor' },
+    { type: 'action', value: 'square' },
+    { type: 'action', value: '__proto__' },
+  ];
+
+  for (const input of malformed) {
+    assert.throws(() => applyInput(state, input), TypeError, `input ${JSON.stringify(input)} must be rejected`);
+  }
+  expectDisplay(state, '', '4+', 'a rejected input must leave the state untouched');
+});
+
 // --- AC-2: chaining, operators, digits ---------------------------------------------------------
 
 test('chains 4+8+9 left to right and splits the display after equals', () => {
