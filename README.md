@@ -11,7 +11,7 @@ A simple browser-based calculator with a dark theme, supporting basic arithmetic
 - Chained calculations (e.g. `4+8+9=` evaluates left to right)
 - Continue from a previous result by pressing an operator right after `=`
 - Decimal point support and floating-point rounding (e.g. `0.1 + 0.2`)
-- Division-by-zero shows `Error`
+- Division-by-zero shows `Error` as soon as the division is evaluated, including in the middle of a chain (e.g. `5 ÷ 0 +`)
 - Responsive layout for small screens
 
 ## Running it
