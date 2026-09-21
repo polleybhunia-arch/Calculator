@@ -1,0 +1,15 @@
+{
+  "unit": "CALC-001",
+  "gate": "unit",
+  "phase": "red",
+  "command": "node --test \"tests/unit/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "41e8e4e27d75ed07cb40c52df465419cb828d6e0",
+  "dirty": false,
+  "timestamp": "2026-09-21T18:30:43.525Z",
+  "tests": 67,
+  "pass": 54,
+  "fail": 13,
+  "outputTail": "      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: { expression: '', current: '5÷0+' },\n    expected: { expression: '5÷0', current: 'Error' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n\ntest at tests\\unit\\divide-by-zero.test.js:141:1\n✖ ignores equals after an operator resolved a divide-by-zero (2.7008ms)\n  AssertionError [ERR_ASSERTION]: precondition: after \"5 / 0 +\" and before any recovery input: core rendered {\"expression\":\"\",\"current\":\"5÷0+\"}\n  + actual - expected\n  \n    {\n  +   current: '5÷0+',\n  +   expression: ''\n  -   current: 'Error',\n  -   expression: '5÷0'\n    }\n  \n      at expectDisplay (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\divide-by-zero.test.js:48:10)\n      at runToOperatorResolvedError (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\divide-by-zero.test.js:55:3)\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\divide-by-zero.test.js:143:19)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: { expression: '', current: '5÷0+' },\n    expected: { expression: '5÷0', current: 'Error' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+  "passed": false
+}
