@@ -1,0 +1,15 @@
+{
+  "unit": "CALC-001",
+  "gate": "regression",
+  "phase": "final",
+  "command": "node --test \"tests/regression/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "f9426e284219f49816abad088275d219c72bdd81",
+  "dirty": false,
+  "timestamp": "2026-09-21T19:08:37.909Z",
+  "tests": 17,
+  "pass": 17,
+  "fail": 0,
+  "outputTail": "✔ README division by zero shows Error also when an operator resolves it (126.3586ms)\n✔ README division by zero shows Error also in the middle of a longer chain (45.9631ms)\n✔ README Error recovery works after a divide-by-zero resolved by an operator (39.5702ms)\n✔ README divide-by-zero bullet says Error shows as soon as the division is evaluated, also mid-chain (8.4383ms)\n✔ README live trail shows the whole expression 4+8+9 while typing (142.2177ms)\n✔ README equals shows the expression on the small line and the result below (108.6651ms)\n✔ README chained calculations evaluate left to right (121.8254ms)\n✔ README operator right after equals continues from the result (152.8507ms)\n✔ README decimal point support adds decimal operands (71.0318ms)\n✔ README floating-point rounding trims noise and limits decimals (122.2635ms)\n✔ README division by zero shows Error (57.0418ms)\n✔ baseline Error recovery starts a fresh calculation on the next digit (51.2567ms)\n✔ shipped scripts contain no import or export statement (102.6332ms)\n✔ index.html contains no script of type module (21.3003ms)\n✔ shipped scripts contain no eval, new Function or document.write (28.6186ms)\n✔ shipped scripts contain no innerHTML, outerHTML or insertAdjacentHTML (17.4748ms)\n✔ index.html and scripts reference no third-party or CDN host (65.4149ms)\nℹ tests 17\nℹ suites 0\nℹ pass 17\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 2405.2308\n",
+  "passed": true
+}

@@ -1,20 +1,20 @@
 ---
 id: CALC-001
 title: Show Error immediately when a divide-by-zero is resolved by an operator press
-status: IN_PROGRESS
+status: COMPLETE
 tier: T1
 depends_on: BOOT-001
-base_ref:
-head_ref:
+base_ref: bf27d9cc0718cab6cde9f08e271dcefa7b5db092
+head_ref: f9426e284219f49816abad088275d219c72bdd81
 tdd_exempt:
 tdd_refactor_skip:
-review_status: NONE
-review_file:
-reviewed_ref:
-review_model:
+review_status: APPROVED
+review_file: .agent/reviews/CALC-001-r1.md
+reviewed_ref: f9426e284219f49816abad088275d219c72bdd81
+review_model: claude-opus-5
 review_fallback:
-security_review:
-docs:
+security_review: N/A: pure arithmetic guard inside the core; no new input surface, no DOM or markup write, no storage, network or dependency change. The unit does edit chooseOperator on the input-handling path, but the section 8 input-handling trigger does not bite: applyInput descriptor validation, the DOM adapter raw-input filtering and the textContent-only display writes are all unmodified, and the markup-write traps plus source-safety.test.js run unchanged and green on head_ref (reviewer finding F-4)
+docs: UPDATED
 blocked_reason:
 ---
 
@@ -169,9 +169,22 @@ Standard DoD (CLAUDE.md §12) plus:
   manual check stays `UNVERIFIED`.
 
 ## Known Issues
-(none yet)
+Reviewer nits from `.agent/reviews/CALC-001-r1.md` (no Critical, Major or Minor finding). None is fixed
+in this unit because any new commit would invalidate the SHA-bound approval; they are reported to the
+user in the final report.
+- The regression suite now pins README prose (four tokens in the divide-by-zero bullet, F-2). A future
+  rewording that stays correct but drops a token reds the regression gate and needs a `kind:
+  test-change` record. Deliberate (matrix AC-6 oracle).
+- `README.md:14` is one 118-character line while sibling bullets wrap near 80 columns (F-1). Cosmetic;
+  wrapping it later is safe because the test re-joins wrapped lines.
+- The test helpers `toInput` / `press` / `expectDisplay` are now duplicated in two unit files (F-3);
+  `KEY-001` extracts them into a new `tests/helpers/core-input.js` (listed in its carried-forward items).
 
 ## Log
 - 2026-09-21T03:53:52Z | NEW -> PLANNED | planner@claude-opus-5 | created from .agent/handoffs/PLAN-03-orchestrator-to-planner.md (user decision OQ-B1: separate fix unit); depends on BOOT-001; OQ-C1 open
 - 2026-09-21T18:13:20Z | PLANNED -> READY | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): gate 2 passed; matrix .agent/units/CALC-001.matrix.md by test-designer@claude-sonnet-5 (handoffs CALC-001-01, CALC-001-02), 21 new named rows plus 21 existing guards; OQ-C1 and OQ-C2 resolved by the user; BOOT-001 COMPLETE (dependency met); the test-designer also added the missing traceability row to the BOOT-001 matrix
 - 2026-09-21T18:13:21Z | READY -> IN_PROGRESS | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): branch agent/CALC-001-midchain-divide-by-zero created on top of the completed BOOT-001 branch; stage order per .agent/decisions/D-006-calc001-stage-order.md (integration-tester RED tests first, implementer fix, documenter README last); registry change covered by D-007; RED rows are expected to fail on the unmodified core, GUARD rows to pass
+- 2026-09-21T18:53:07Z | IN_PROGRESS -> TESTING | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): genuine RED then GREEN then REFACTOR evidence .agent/test-results/CALC-001/latest-unit-red.json, latest-unit-green.json, latest-unit-refactor.json (implementer@claude-sonnet-5, handoff CALC-001-06): 13 unit rows failed on assertions showing the pre-fix values, 2 GUARD rows passed throughout; RED integration and regression evidence by integration-tester@claude-sonnet-5 first per D-006 (handoff CALC-001-04); documenter@claude-sonnet-5 handoff CALC-001-08, docs UPDATED; a throwaway minimality check over 1,101,640 sequences found 49,252 mismatches, all operator presses resolving a divide-by-zero
+- 2026-09-21T18:53:08Z | TESTING -> REVIEW | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): final gates unit 67/67, integration 22/22, regression 17/17, lint PASS on clean head_ref f9426e28 (.agent/test-results/CALC-001/latest-unit-final.json and the integration, regression, lint equivalents); base_ref bf27d9cc; T1: security review N/A (CLAUDE.md section 8 triggers not met, reason recorded in the unit), architecture review not triggered (no new module boundary)
+- 2026-09-21T19:07:24Z | REVIEW -> INTEGRATION | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): gate 5 passed on head_ref f9426e28: code review .agent/reviews/CALC-001-r1.md by reviewer@claude-opus-5 (no fallback), verdict APPROVED for exactly that head, AC-1..AC-6 SATISFIED, 4 Nit findings only (recorded in Known Issues and the KEY-001 carried-forward list); security review N/A with the reason widened per finding F-4; no commit since head_ref (HEAD equals head_ref, no non-.agent changes)
+- 2026-09-21T19:08:47Z | INTEGRATION -> COMPLETE | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): gate 8 passed; authoritative final gates on head_ref f9426e28 with a clean tree outside .agent: unit 67/67, integration 22/22, regression 17/17, lint PASS (covers script.js and calculator-core.js), typecheck and build N/A per gates.json; docs UPDATED (documenter@claude-sonnet-5, handoff CALC-001-08); security review N/A with recorded reason; code review APPROVED; evidence .agent/test-results/CALC-001/latest-*-final.json
