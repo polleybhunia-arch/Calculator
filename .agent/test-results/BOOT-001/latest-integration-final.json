@@ -1,0 +1,15 @@
+{
+  "unit": "BOOT-001",
+  "gate": "integration",
+  "phase": "final",
+  "command": "node --test \"tests/integration/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "28a19873b0c03224e111afb30e44829c919c9945",
+  "dirty": false,
+  "timestamp": "2026-09-21T14:10:21.996Z",
+  "tests": 20,
+  "pass": 20,
+  "fail": 0,
+  "outputTail": "✔ shows an empty expression line and 0 when the page loads (46.5586ms)\n✔ runs every script tag of index.html in document order without module syntax (7.4003ms)\n✔ loads calculator-core.js before script.js in index.html (0.9189ms)\n✔ wires every digit button 0 to 9 to the main line (4.9519ms)\n✔ ignores a second decimal point typed through the buttons (3.5981ms)\n✔ shows the display symbol for each operator button (9.4776ms)\n✔ AC clears an unfinished chain, a result and an Error (6.9454ms)\n✔ DEL removes the last typed digit (2.5503ms)\n✔ DEL right after an operator clears the whole calculation on the page (3.0364ms)\n✔ DEL on Error clears it on the page (3.2268ms)\n✔ a second operator press replaces the first on the page (2.4034ms)\n✔ equals with no pending operator changes nothing on the page (3.2139ms)\n✔ equals right after an operator uses the held value as the second operand on the page (1.9823ms)\n✔ a digit after a result starts a new calculation on the page (2.5689ms)\n✔ an operator after Error clears first and starts from 0 on the page (1.7469ms)\n✔ leading zeros are replaced and a zero before a point is kept on the page (3.3501ms)\n✔ a decimal point after an operator starts 0. in the next operand on the page (2.0613ms)\n✔ clicking the button container outside any button changes nothing (2.3672ms)\n✔ updates the display through textContent without writing markup (2.0556ms)\n✔ treats a button data attribute containing markup as inert text (1.6751ms)\nℹ tests 20\nℹ suites 0\nℹ pass 20\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 214.6549\n",
+  "passed": true
+}

@@ -1,0 +1,15 @@
+{
+  "unit": "BOOT-001",
+  "gate": "regression",
+  "phase": "final",
+  "command": "node --test \"tests/regression/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "28a19873b0c03224e111afb30e44829c919c9945",
+  "dirty": false,
+  "timestamp": "2026-09-21T14:10:22.454Z",
+  "tests": 13,
+  "pass": 13,
+  "fail": 0,
+  "outputTail": "✔ README live trail shows the whole expression 4+8+9 while typing (9.2632ms)\n✔ README equals shows the expression on the small line and the result below (2.1116ms)\n✔ README chained calculations evaluate left to right (4.0194ms)\n✔ README operator right after equals continues from the result (2.1105ms)\n✔ README decimal point support adds decimal operands (2.1076ms)\n✔ README floating-point rounding trims noise and limits decimals (4.2175ms)\n✔ README division by zero shows Error (1.5311ms)\n✔ baseline Error recovery starts a fresh calculation on the next digit (1.9724ms)\n✔ shipped scripts contain no import or export statement (4.5151ms)\n✔ index.html contains no script of type module (1.4784ms)\n✔ shipped scripts contain no eval, new Function or document.write (2.7518ms)\n✔ shipped scripts contain no innerHTML, outerHTML or insertAdjacentHTML (0.8649ms)\n✔ index.html and scripts reference no third-party or CDN host (1.2047ms)\nℹ tests 13\nℹ suites 0\nℹ pass 13\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 136.2676\n",
+  "passed": true
+}

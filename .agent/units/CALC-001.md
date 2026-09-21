@@ -133,13 +133,14 @@ Standard DoD (CLAUDE.md §12) plus:
   `BOOT-001`; if it is still outstanding, this unit inherits the same gate-8 block).
 
 ## Risks / Open Questions
-- **OQ-C1 (owner: user, blocks READY)**: what should the expression line show when the
+- **OQ-C1 — RESOLVED 2026-09-21 (user confirmed the proposed default, `2+3÷0` / `Error`; AC-3 stands
+  as written, "subject to OQ-C1" is now satisfied)**. Original question: what should the expression line show when the
   divide-by-zero happens later in a chain? Proposed default `2 + 3 / 0 *` → expression `2+3÷0`,
   current `Error` — the full typed expression, which is exactly what `2 + 3 / 0 =` renders today
   (verified by hand-trace of `script.js` at `e02035b`: `equals()` builds
   `history.join('') + currentInput` = `2+3÷0`). The alternative would be `5÷0` (only the failing
   operation, using the resolved intermediate `5`). One word settles AC-3.
-- **OQ-C2 (owner: user, non-blocking — derived, stated for confirmation)**: after the fix the
+- **OQ-C2 — RESOLVED 2026-09-21 (user confirmed; AC-4 stands as written)**. Original: after the fix the
   state is treated as fully equivalent to having pressed `=`, so a following `=` is ignored and
   the expression line keeps showing `5÷0` (AC-4). This follows from the user's own wording
   ("exactly as `5 / 0 =` does today"; "existing Error recovery applies unchanged"); contradict it
@@ -153,6 +154,11 @@ Standard DoD (CLAUDE.md §12) plus:
 - RK-12 (owner: reviewer): the `=` path already produces `Error`; sharing the finalize step
   between the two paths is the clean fix, but it must not change what `=` renders (pinned by the
   `BOOT-001` rows for `5 / 0 =` and `2 + 3 / 0 =`).
+- RK-14 (owner: implementer/reviewer, from `.agent/reviews/BOOT-001-arch1.md` F-3): the fix edits the
+  operator-swap and operator-resolve transitions, so it must preserve the invariant
+  "`resetOnNextInput && !justCalculated` implies a non-empty `history`" (the swap uses
+  `history.slice(0, -1)`). It must also follow `.agent/decisions/D-005-layering-rule.md` (accepted):
+  the change stays inside the core; no DOM access, no second copy of state.
 - RK-3 (owner: user): no real browser — the click-path evidence comes from the DOM stub; a
   manual check stays `UNVERIFIED`.
 

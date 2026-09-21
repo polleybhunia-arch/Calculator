@@ -1,20 +1,20 @@
 ---
 id: BOOT-001
 title: Characterize current behavior and extract a testable calculator core
-status: IN_PROGRESS
+status: COMPLETE
 tier: T2
 depends_on:
-base_ref:
-head_ref:
+base_ref: e02035bab13f5365a110b60a86ba3a8ae42063ed
+head_ref: 28a19873b0c03224e111afb30e44829c919c9945
 tdd_exempt:
 tdd_refactor_skip:
-review_status: NONE
-review_file:
-reviewed_ref:
-review_model:
+review_status: APPROVED
+review_file: .agent/reviews/BOOT-001-r1.md
+reviewed_ref: 28a19873b0c03224e111afb30e44829c919c9945
+review_model: claude-opus-5
 review_fallback:
-security_review:
-docs:
+security_review: APPROVED
+docs: UPDATED
 blocked_reason:
 ---
 
@@ -179,8 +179,22 @@ Standard DoD (CLAUDE.md §12) plus:
 ## Known Issues
 - Mid-chain divide-by-zero (`5 / 0 +` shows `5÷0+`, then `=` shows expression `5÷0+Error` with
   current `NaN`) contradicts README and is knowingly left in place by this unit. Owner: `CALC-001`.
+- Minor and Nit findings from the three reviews (`.agent/reviews/BOOT-001-r1.md`, `-sec1.md`,
+  `-arch1.md`) were **approved by the user on 2026-09-21 to be carried forward, not fixed here**
+  (fixing would need a new commit and three fresh reviews). Owner: `KEY-001`, which lists each item in
+  its "Carried forward from the BOOT-001 reviews" section: untested `data-operator` / `data-action`
+  boundary filters in `script.js`; the AC-7 scan not applying its code patterns to `index.html`; the
+  `stripComments` regex-literal blind spot; the input vocabulary copied in the core and `script.js`
+  (export once at KEY-001); `CALC_STUB_TRANSFORM` not recorded in gate evidence.
+- The unit suite has 52 tests against 51 matrix rows (`throws a TypeError for a malformed input
+  descriptor`, recorded in `D-003`). `.agent/units/BOOT-001.matrix.md` still says that policy is
+  untested; the test-designer adds the row when dispatched for `CALC-001`. Owner: test-designer.
 
 ## Log
 - 2026-09-21T03:18:17Z | NEW -> PLANNED | planner@claude-opus-5 | created from .agent/plan.md (keyboard input, T2); OQ-6/OQ-7 open
 - 2026-09-21T04:19:22Z | PLANNED -> READY | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): gate 2 passed; matrix .agent/units/BOOT-001.matrix.md by test-designer@claude-sonnet-5 (handoffs BOOT-001-02, BOOT-001-04); OQ-6, OQ-B1..B3 resolved by user; OQ-7 (lint) deferred to gate 8
 - 2026-09-21T06:39:20Z | READY -> IN_PROGRESS | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): branch agent/BOOT-001-core-extraction at 1180f5a, tree clean; stage order per .agent/decisions/D-002-boot001-stage-order.md (integration-tester safety net first, then implementer); characterization safety-net rows are green-from-start by design, not a false RED
+- 2026-09-21T13:41:09Z | IN_PROGRESS -> TESTING | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): TDD evidence .agent/test-results/BOOT-001/latest-unit-red.json then latest-unit-green.json then latest-unit-refactor.json (implementer@claude-sonnet-5, handoff BOOT-001-08); safety net by integration-tester@claude-sonnet-5 first per D-002 (handoff BOOT-001-06), no second pass needed because the orchestrator re-ran all suites; documenter@claude-sonnet-5 handoff BOOT-001-10, docs UPDATED; note: unit suite has 1 test beyond the matrix (throws a TypeError for a malformed input descriptor, see D-003), matrix row to be added at the next test-designer dispatch
+- 2026-09-21T13:41:10Z | TESTING -> REVIEW | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): final gates unit 52/52, integration 20/20, regression 13/13, lint PASS on clean head_ref 28a19873 (.agent/test-results/BOOT-001/latest-unit-final.json and the integration, regression, lint equivalents); base_ref e02035ba; architecture review required (T2, new module boundary); security review judged triggered (DOM display writes and boundary validation of user-controllable data attributes), doubt goes to the higher tier
+- 2026-09-21T14:09:52Z | REVIEW -> INTEGRATION | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): gate 5 passed on head_ref 28a19873, all three reviews on claude-opus-5 with no fallback and verdict APPROVED for exactly that head: code review .agent/reviews/BOOT-001-r1.md (AC-1..AC-8 SATISFIED), security review .agent/reviews/BOOT-001-sec1.md, architecture review .agent/reviews/BOOT-001-arch1.md; no Critical or Major finding; Minor findings carried forward to KEY-001 with user approval; D-005 accepted by the user; no commit since head_ref (HEAD equals head_ref, no non-.agent changes)
+- 2026-09-21T14:28:29Z | INTEGRATION -> COMPLETE | orchestrator@claude-sonnet-5 | FALLBACK(opus->sonnet): gate 8 passed; authoritative final gates on head_ref 28a19873 with a clean tree outside .agent: unit 52/52, integration 20/20, regression 13/13, lint PASS using the user-corrected command in .agent/gates.json that now covers calculator-core.js (OQ-7 resolved), typecheck and build N/A per gates.json; docs UPDATED (documenter@claude-sonnet-5, handoff BOOT-001-10); security review APPROVED; architecture review APPROVED; evidence .agent/test-results/BOOT-001/latest-*-final.json
