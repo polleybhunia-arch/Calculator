@@ -1,0 +1,15 @@
+{
+  "unit": "CALC-001",
+  "gate": "integration",
+  "phase": "red",
+  "command": "node --test \"tests/integration/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "95f2685f23485744c104d2af4bf6a57775805cb0",
+  "dirty": false,
+  "timestamp": "2026-09-21T18:20:01.034Z",
+  "tests": 22,
+  "pass": 20,
+  "fail": 2,
+  "outputTail": "      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.start (node:internal/test_runner/test:1177:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: { expression: '', current: '5÷0+' },\n    expected: { expression: '5÷0', current: 'Error' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n\ntest at tests\\integration\\divide-by-zero-click.test.js:32:1\n✖ starts a new calculation on the page when a digit is clicked after an operator-resolved Error (33.9275ms)\n  AssertionError [ERR_ASSERTION]: precondition: after \"5 / 0 +\" and before any recovery click: page shows {\"expression\":\"\",\"current\":\"5÷0+\"}, expected {\"expression\":\"5÷0\",\"current\":\"Error\"}\n  + actual - expected\n  \n    {\n  +   current: '5÷0+',\n  +   expression: ''\n  -   current: 'Error',\n  -   expression: '5÷0'\n    }\n  \n      at assertDisplay (C:\\Users\\User\\Documents\\Calculator\\tests\\integration\\divide-by-zero-click.test.js:20:10)\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\integration\\divide-by-zero-click.test.js:37:3)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: { expression: '', current: '5÷0+' },\n    expected: { expression: '5÷0', current: 'Error' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+  "passed": false
+}
