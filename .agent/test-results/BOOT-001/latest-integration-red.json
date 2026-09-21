@@ -1,0 +1,15 @@
+{
+  "unit": "BOOT-001",
+  "gate": "integration",
+  "phase": "red",
+  "command": "node --test \"tests/integration/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "6281af765ae9d0c4519d54257f9ae5e7ceb82505",
+  "dirty": false,
+  "timestamp": "2026-09-21T07:56:17.454Z",
+  "tests": 20,
+  "pass": 19,
+  "fail": 1,
+  "outputTail": "✔ DEL on Error clears it on the page (1.4575ms)\n✔ a second operator press replaces the first on the page (1.7944ms)\n✔ equals with no pending operator changes nothing on the page (2.1111ms)\n✔ equals right after an operator uses the held value as the second operand on the page (1.2643ms)\n✔ a digit after a result starts a new calculation on the page (1.7322ms)\n✔ an operator after Error clears first and starts from 0 on the page (1.2173ms)\n✔ leading zeros are replaced and a zero before a point is kept on the page (2.2875ms)\n✔ a decimal point after an operator starts 0. in the next operand on the page (1.7169ms)\n✔ clicking the button container outside any button changes nothing (1.3896ms)\n✔ updates the display through textContent without writing markup (1.2187ms)\n✔ treats a button data attribute containing markup as inert text (1.7202ms)\nℹ tests 20\nℹ suites 0\nℹ pass 19\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 174.2807\n\n✖ failing tests:\n\ntest at tests\\integration\\dom-click.test.js:44:1\n✖ loads calculator-core.js before script.js in index.html (1.0729ms)\n  AssertionError [ERR_ASSERTION]: boundary: index.html must list calculator-core.js (found [\"script.js\"])\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\integration\\dom-click.test.js:49:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: -1,\n    expected: -1,\n    operator: 'notStrictEqual',\n    diff: 'simple'\n  }\n",
+  "passed": false
+}

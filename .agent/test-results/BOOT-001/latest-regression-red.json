@@ -1,0 +1,15 @@
+{
+  "unit": "BOOT-001",
+  "gate": "regression",
+  "phase": "red",
+  "command": "node --test \"tests/regression/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "6281af765ae9d0c4519d54257f9ae5e7ceb82505",
+  "dirty": false,
+  "timestamp": "2026-09-21T07:56:17.964Z",
+  "tests": 13,
+  "pass": 8,
+  "fail": 5,
+  "outputTail": "test at tests\\regression\\source-safety.test.js:40:1\n✖ shipped scripts contain no innerHTML, outerHTML or insertAdjacentHTML (0.8155ms)\n  AssertionError [ERR_ASSERTION]: AC-7 scan: shipped file calculator-core.js does not exist (all of index.html, script.js, calculator-core.js must be present and scanned)\n      at readShipped (C:\\Users\\User\\Documents\\Calculator\\tests\\helpers\\source-scan.js:55:10)\n      at readAllShipped (C:\\Users\\User\\Documents\\Calculator\\tests\\helpers\\source-scan.js:65:17)\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\regression\\source-safety.test.js:41:20)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at tests\\regression\\source-safety.test.js:48:1\n✖ index.html and scripts reference no third-party or CDN host (1.8016ms)\n  AssertionError [ERR_ASSERTION]: AC-7 scan: shipped file calculator-core.js does not exist (all of index.html, script.js, calculator-core.js must be present and scanned)\n      at readShipped (C:\\Users\\User\\Documents\\Calculator\\tests\\helpers\\source-scan.js:55:10)\n      at readAllShipped (C:\\Users\\User\\Documents\\Calculator\\tests\\helpers\\source-scan.js:65:17)\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\regression\\source-safety.test.js:49:26)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+  "passed": false
+}
