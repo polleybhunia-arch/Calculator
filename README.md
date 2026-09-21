@@ -35,4 +35,5 @@ Then open the printed URL (e.g. `http://localhost:3000`) in your browser.
 
 - [index.html](index.html) — markup and button layout
 - [style.css](style.css) — dark theme styling
+- [calculator-core.js](calculator-core.js) — calculator state machine and display strings (loaded before `script.js`)
 - [script.js](script.js) — calculator logic and display state
