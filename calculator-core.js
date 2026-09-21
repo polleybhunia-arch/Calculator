@@ -9,12 +9,13 @@
   // Results keep ten decimals; this trims floating-point noise such as 0.1 + 0.2.
   const ROUNDING_FACTOR = 1e10;
 
-  // Unicode escapes keep this file ASCII: minus is U+2212, times U+00D7, divide U+00F7.
-  const OPERATOR_SYMBOLS = new Map([
-    ['+', '+'],
-    ['-', '−'],
-    ['*', '×'],
-    ['/', '÷'],
+  // One entry per operator input value. The display symbols are minus U+2212, times U+00D7 and
+  // divide U+00F7; a negative number's sign stays the ASCII hyphen-minus.
+  const OPERATORS = new Map([
+    ['+', { symbol: '+', apply: (a, b) => a + b }],
+    ['-', { symbol: '−', apply: (a, b) => a - b }],
+    ['*', { symbol: '×', apply: (a, b) => a * b }],
+    ['/', { symbol: '÷', apply: (a, b) => a / b }],
   ]);
 
   // States are never mutated: every transition returns a new object and copies, never edits,
@@ -51,21 +52,21 @@
 
   function chooseOperator(state, nextOperator) {
     const base = state.currentInput === ERROR_TEXT ? createState() : state;
-    const symbol = OPERATOR_SYMBOLS.get(nextOperator);
-    let working;
+    const { symbol } = OPERATORS.get(nextOperator);
 
-    if (base.justCalculated) {
-      // Continue the next calculation from the previous result
-      working = { ...base, history: [base.currentInput], justCalculated: false };
-    } else if (base.resetOnNextInput) {
+    if (base.resetOnNextInput && !base.justCalculated) {
       // Pressed an operator again without typing a number: swap it instead of appending
       return { ...base, history: [...base.history.slice(0, -1), symbol], operator: nextOperator };
-    } else {
-      working = { ...base, history: [...base.history, base.currentInput] };
     }
 
-    // Chain calculations: resolve the pending operation before starting the next one
-    const resolved = working.operator !== null ? computeResult(working) : working;
+    // Right after '=' the next calculation continues from the result; otherwise the number just
+    // typed joins the trail.
+    const committed = base.justCalculated
+      ? { ...base, history: [base.currentInput], justCalculated: false }
+      : { ...base, history: [...base.history, base.currentInput] };
+
+    // Chain calculations: resolve the pending operation (if any) before starting the next one
+    const resolved = computeResult(committed);
 
     return {
       ...resolved,
@@ -85,33 +86,14 @@
 
     const a = parseFloat(state.previousInput);
     const b = parseFloat(state.currentInput);
-    let result;
+    const settled = { ...state, previousInput: null, operator: null, resetOnNextInput: true };
 
-    switch (state.operator) {
-      case '+':
-        result = a + b;
-        break;
-      case '-':
-        result = a - b;
-        break;
-      case '*':
-        result = a * b;
-        break;
-      default:
-        if (b === 0) {
-          return { ...state, currentInput: ERROR_TEXT, previousInput: null, operator: null, resetOnNextInput: true };
-        }
-        result = a / b;
-        break;
+    if (state.operator === '/' && b === 0) {
+      return { ...settled, currentInput: ERROR_TEXT };
     }
 
-    return {
-      ...state,
-      currentInput: String(Math.round(result * ROUNDING_FACTOR) / ROUNDING_FACTOR),
-      previousInput: null,
-      operator: null,
-      resetOnNextInput: true,
-    };
+    const result = OPERATORS.get(state.operator).apply(a, b);
+    return { ...settled, currentInput: String(Math.round(result * ROUNDING_FACTOR) / ROUNDING_FACTOR) };
   }
 
   function equals(state) {
@@ -158,7 +140,7 @@
         }
         return appendNumber(state, input.value);
       case 'operator':
-        if (!OPERATOR_SYMBOLS.has(input.value)) {
+        if (!OPERATORS.has(input.value)) {
           throw new TypeError('applyInput: an operator input needs one of + - * /');
         }
         return chooseOperator(state, input.value);
