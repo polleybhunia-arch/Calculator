@@ -1,0 +1,15 @@
+{
+  "unit": "CALC-001",
+  "gate": "integration",
+  "phase": "refactor",
+  "command": "node --test \"tests/integration/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "44b7a92bd8f7bba9667d6281ac73b312f997cde9",
+  "dirty": false,
+  "timestamp": "2026-09-21T18:39:24.131Z",
+  "tests": 22,
+  "pass": 22,
+  "fail": 0,
+  "outputTail": "✔ shows Error on the page for each operator button that resolves a divide-by-zero (266.4188ms)\n✔ starts a new calculation on the page when a digit is clicked after an operator-resolved Error (96.8507ms)\n✔ shows an empty expression line and 0 when the page loads (140.5165ms)\n✔ runs every script tag of index.html in document order without module syntax (91.34ms)\n✔ loads calculator-core.js before script.js in index.html (21.9655ms)\n✔ wires every digit button 0 to 9 to the main line (101.5588ms)\n✔ ignores a second decimal point typed through the buttons (78.7225ms)\n✔ shows the display symbol for each operator button (213.7518ms)\n✔ AC clears an unfinished chain, a result and an Error (211.7505ms)\n✔ DEL removes the last typed digit (72.6223ms)\n✔ DEL right after an operator clears the whole calculation on the page (51.2242ms)\n✔ DEL on Error clears it on the page (63.039ms)\n✔ a second operator press replaces the first on the page (24.7519ms)\n✔ equals with no pending operator changes nothing on the page (60.5149ms)\n✔ equals right after an operator uses the held value as the second operand on the page (55.0332ms)\n✔ a digit after a result starts a new calculation on the page (39.6738ms)\n✔ an operator after Error clears first and starts from 0 on the page (37.0798ms)\n✔ leading zeros are replaced and a zero before a point is kept on the page (73.2887ms)\n✔ a decimal point after an operator starts 0. in the next operand on the page (26.7156ms)\n✔ clicking the button container outside any button changes nothing (47.2647ms)\n✔ updates the display through textContent without writing markup (39.7817ms)\n✔ treats a button data attribute containing markup as inert text (29.7207ms)\nℹ tests 22\nℹ suites 0\nℹ pass 22\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3803.2751\n",
+  "passed": true
+}
