@@ -41,6 +41,16 @@ test('runs every script tag of index.html in document order without module synta
   assert.deepEqual(page.press('7'), display('', '7'), 'boundary: click 7 after loading all scripts');
 });
 
+test('loads calculator-core.js before script.js in index.html', () => {
+  const sources = readIndexHtml().scripts.map((s) => s.src);
+  const core = sources.indexOf('calculator-core.js');
+  const page = sources.indexOf('script.js');
+
+  assert.notEqual(core, -1, `boundary: index.html must list calculator-core.js (found ${JSON.stringify(sources)})`);
+  assert.notEqual(page, -1, `boundary: index.html must list script.js (found ${JSON.stringify(sources)})`);
+  assert.ok(core < page, `boundary: calculator-core.js must load before script.js (order was ${JSON.stringify(sources)})`);
+});
+
 test('wires every digit button 0 to 9 to the main line', () => {
   const page = loadPage();
   const digits = '1234567890';

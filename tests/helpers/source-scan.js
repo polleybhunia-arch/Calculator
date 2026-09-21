@@ -1,0 +1,118 @@
+'use strict';
+// Static-scan helpers for the AC-7 source-safety regression rows. Whitespace-tolerant patterns
+// run against the shipped files with comments removed, so prose in comments is never flagged.
+
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const SHIPPED_FILES = ['index.html', 'script.js', 'calculator-core.js'];
+const SCRIPT_FILES = ['script.js', 'calculator-core.js'];
+
+// Removes // and /* */ comments but keeps string literals intact (so a URL inside a string is
+// still scanned). Known limitation: a regex literal that contains a quote or // would confuse
+// it; neither shipped script uses one.
+function stripComments(source) {
+  let out = '';
+  let quote = null;
+  let i = 0;
+  while (i < source.length) {
+    const c = source[i];
+    const next = source[i + 1];
+    if (quote) {
+      out += c;
+      if (c === '\\') {
+        out += next === undefined ? '' : next;
+        i += 2;
+        continue;
+      }
+      if (c === quote) quote = null;
+      i += 1;
+      continue;
+    }
+    if (c === '"' || c === '\'' || c === '`') {
+      quote = c;
+      out += c;
+      i += 1;
+    } else if (c === '/' && next === '/') {
+      while (i < source.length && source[i] !== '\n') i += 1;
+    } else if (c === '/' && next === '*') {
+      const end = source.indexOf('*/', i + 2);
+      i = end === -1 ? source.length : end + 2;
+      out += ' ';
+    } else {
+      out += c;
+      i += 1;
+    }
+  }
+  return out;
+}
+
+// A missing shipped file FAILS the test (never skips): AC-7 covers all three files.
+function readShipped(name) {
+  const file = path.join(REPO_ROOT, name);
+  assert.ok(fs.existsSync(file), `AC-7 scan: shipped file ${name} does not exist (all of ${SHIPPED_FILES.join(', ')} must be present and scanned)`);
+  return fs.readFileSync(file, 'utf8');
+}
+
+// Reads all three shipped files. `code` holds the comment-stripped JS, `html` the raw markup.
+function readAllShipped() {
+  const html = readShipped('index.html');
+  const code = {};
+  const raw = {};
+  for (const name of SCRIPT_FILES) {
+    raw[name] = readShipped(name);
+    code[name] = stripComments(raw[name]);
+  }
+  return { html, code, raw };
+}
+
+const PATTERNS = {
+  // Statement-form import/export, dynamic import(), import.meta. `module.exports` is allowed.
+  moduleSyntax: [
+    /(?:^|[;{}])\s*(?:import|export)\b(?!\s*[:=,.)\]])/m,
+    /\bimport\s*\(/,
+    /\bimport\s*\.\s*meta\b/,
+  ],
+  // `\beval\b` is a superset of `eval(` so an indirect `const f = eval;` is caught too.
+  dynamicCode: [/\beval\b/, /\bnew\s+Function\b/, /\bFunction\s*\(/, /\bdocument\s*\.\s*write/],
+  markupWrites: [/\binnerHTML\b/, /\bouterHTML\b/, /\binsertAdjacentHTML\b/],
+  // Absolute URLs, and string literals that start with a protocol-relative //host.
+  externalHosts: [/\b(?:https?|wss?|ftp):\/\//i, /['"`]\s*\/\/[^\s'"`]/],
+};
+
+function findMatches(text, patterns) {
+  const found = [];
+  for (const pattern of patterns) {
+    const m = pattern.exec(text);
+    if (m) {
+      const line = text.slice(0, m.index).split('\n').length;
+      found.push(`${pattern} matched ${JSON.stringify(m[0].trim())} near line ${line}`);
+    }
+  }
+  return found;
+}
+
+// <script ...> tags whose attributes declare type="module" (either quote style, any case).
+function findModuleScriptTags(html) {
+  return (html.match(/<script\b[^>]*>/gi) || []).filter((tag) => /\btype\s*=\s*(?:"\s*module\s*"|'\s*module\s*'|module\b)/i.test(tag));
+}
+
+// Every src/href attribute value in the markup.
+function findReferences(html) {
+  const refs = [];
+  const attr = /\b(?:src|href)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi;
+  let m;
+  while ((m = attr.exec(html)) !== null) {
+    refs.push(m[1] ?? m[2] ?? m[3]);
+  }
+  return refs;
+}
+
+const isRelativeReference = (ref) => !/^[a-z][a-z0-9+.-]*:/i.test(ref) && !ref.startsWith('//');
+
+module.exports = {
+  PATTERNS, SCRIPT_FILES, SHIPPED_FILES, REPO_ROOT,
+  stripComments, readShipped, readAllShipped, findMatches, findModuleScriptTags, findReferences, isRelativeReference,
+};
