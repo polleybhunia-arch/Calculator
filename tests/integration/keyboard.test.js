@@ -403,3 +403,21 @@ test('holding Enter so it repeats does not dispatch again for the extra repeats'
   assert.equal(spy.count(), afterFirst, 'repeats of Enter must not dispatch again (a repeated = is already a no-op on the display alone)');
   assertDisplay(page.read(), display('5+5', '10'), 'display must stay 5+5 / 10 throughout the repeats');
 });
+
+test('holding Enter on a Tab focused digit button performs the action once', () => {
+  // r2 F-1 / D-012 (rejected): a held Enter on a Tab-focused button re-fires the browser's own
+  // native activation on every repeat (the stub models this at Node.dispatchEvent, gated only on
+  // defaultPrevented, not on event.repeat). Digits are deliberately repeatable through the
+  // document-level keydown channel (AC-7, OQ-4), but that is a different channel from a focused
+  // button's native activation, which must act once per physical press regardless of the focused
+  // button's input type (AC-6). Without the fix this renders 777, not 7.
+  const page = loadPage();
+  const seven = page.buttonFor('7');
+  seven.focus();
+
+  page.dispatch('keydown', seven, { key: 'Enter', repeat: false });
+  page.dispatch('keydown', seven, { key: 'Enter', repeat: true });
+  page.dispatch('keydown', seven, { key: 'Enter', repeat: true });
+
+  assertDisplay(page.read(), display('', '7'), 'a held Enter on a Tab-focused digit button must type the digit exactly once, not on every repeat');
+});

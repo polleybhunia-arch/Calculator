@@ -89,6 +89,16 @@
     if ((event.key === 'Enter' || event.key === ' ') && isCalculatorButton(event.target)) {
       // A button reached by Tab keeps its native Enter/Space activation (a click through the
       // handler above); handling it here too would fire two actions from one keypress (AC-6).
+      // A held key auto-repeats this same keydown, and the browser would natively re-activate the
+      // button on every repeat -- unconditionally, regardless of what input the button represents
+      // (a digit button is deliberately repeatable through the document-level channel below, but
+      // that is a different channel from a focused button's native activation, D-012 rejected,
+      // r2 F-1). preventDefault() suppresses that repeat activation so the button still acts
+      // exactly once per physical press.
+      if (event.repeat) {
+        event.preventDefault();
+        return;
+      }
       return;
     }
 
