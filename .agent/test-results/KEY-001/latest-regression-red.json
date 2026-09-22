@@ -1,0 +1,15 @@
+{
+  "unit": "KEY-001",
+  "gate": "regression",
+  "phase": "red",
+  "command": "node --test \"tests/regression/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "f943a3f0f2cc6442dabb9169ac140b746299134e",
+  "dirty": false,
+  "timestamp": "2026-09-22T03:43:38.685Z",
+  "tests": 19,
+  "pass": 18,
+  "fail": 1,
+  "outputTail": "✔ README operator right after equals continues from the result (2.3659ms)\n✔ README decimal point support adds decimal operands (2.4308ms)\n✔ README floating-point rounding trims noise and limits decimals (4.2356ms)\n✔ README division by zero shows Error (1.6956ms)\n✔ baseline Error recovery starts a fresh calculation on the next digit (2.2531ms)\n✔ shipped scripts contain no import or export statement (4.2794ms)\n✔ index.html contains no script of type module (2.8098ms)\n✔ shipped scripts contain no eval, new Function or document.write (1.6003ms)\n✔ shipped scripts contain no innerHTML, outerHTML or insertAdjacentHTML (0.9176ms)\n✔ index.html and scripts reference no third-party or CDN host (1.2995ms)\n✖ stripComments does not hide code following a regex literal containing a double slash (0.6864ms)\nℹ tests 19\nℹ suites 0\nℹ pass 18\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 158.8336\n\n✖ failing tests:\n\ntest at tests\\regression\\source-safety.test.js:71:1\n✖ stripComments does not hide code following a regex literal containing a double slash (0.6864ms)\n  AssertionError [ERR_ASSERTION]: AC-7: stripComments must keep code that follows a regex literal on the same line (stripped output: \"const re = /https?:\\\\/\\\\\")\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\regression\\source-safety.test.js:82:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+  "passed": false
+}
