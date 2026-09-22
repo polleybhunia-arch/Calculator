@@ -3,13 +3,7 @@
 (function () {
   'use strict';
 
-  const { createState, applyInput, render } = globalThis.CalculatorCore;
-
-  // Button values are user-controllable markup, so they are checked here, at the boundary,
-  // before the core sees them.
-  const NUMBER_CHARACTERS = '0123456789.';
-  const OPERATOR_VALUES = ['+', '-', '*', '/'];
-  const ACTION_VALUES = ['clear', 'delete', 'equals'];
+  const { createState, applyInput, render, mapKey, allowsRepeat, isInput } = globalThis.CalculatorCore;
 
   const expressionDisplay = document.getElementById('display-expression');
   const currentDisplay = document.getElementById('display-current');
@@ -30,20 +24,36 @@
   }
 
   // Returns the core input for a clicked element, or null when the click is not on a
-  // recognized button (a gap between buttons, or a value outside the allowed sets).
+  // recognized button (a gap between buttons, or a value outside the allowed sets). Attribute
+  // precedence (number, then operator, then action) is unchanged; validity now comes from the
+  // core's single exported vocabulary check (D-005 clause 5) instead of a hand-duplicated table.
   function inputFromElement(element) {
     const { number, operator, action } = element.dataset;
 
     if (number !== undefined) {
-      return number.length === 1 && NUMBER_CHARACTERS.includes(number) ? { type: 'number', value: number } : null;
+      const input = { type: 'number', value: number };
+      return isInput(input) ? input : null;
     }
     if (operator !== undefined) {
-      return OPERATOR_VALUES.includes(operator) ? { type: 'operator', value: operator } : null;
+      const input = { type: 'operator', value: operator };
+      return isInput(input) ? input : null;
     }
     if (action !== undefined) {
-      return ACTION_VALUES.includes(action) ? { type: 'action', value: action } : null;
+      const input = { type: 'action', value: action };
+      return isInput(input) ? input : null;
     }
     return null;
+  }
+
+  // True when `element` is one of the calculator's own buttons (has a recognized data-* input
+  // attribute), whether or not its value is valid. Used to let a Tab-focused button keep native
+  // Enter/Space activation instead of also being handled by the keydown listener below (AC-6).
+  function isCalculatorButton(element) {
+    if (!element || !element.dataset) {
+      return false;
+    }
+    const { number, operator, action } = element.dataset;
+    return number !== undefined || operator !== undefined || action !== undefined;
   }
 
   updateDisplay();
@@ -54,5 +64,34 @@
     if (input !== null) {
       dispatch(input);
     }
+
+    // A clicked button keeps browser focus by default; blurring it here means a following Enter
+    // or Space is read as a normal key press, not a native repeat of this same button (AC-6).
+    event.target.blur();
+  });
+
+  // The keyboard channel (D-005 clause 3): converts a keydown into the same input descriptor a
+  // click already produces and calls the same dispatch(input) -- never a second display-write
+  // path, never a synthesized button.click().
+  document.addEventListener('keydown', (event) => {
+    if ((event.key === 'Enter' || event.key === ' ') && isCalculatorButton(event.target)) {
+      // A button reached by Tab keeps its native Enter/Space activation (a click through the
+      // handler above); handling it here too would fire two actions from one keypress (AC-6).
+      return;
+    }
+
+    const input = mapKey(event.key, { ctrlKey: event.ctrlKey, metaKey: event.metaKey, altKey: event.altKey });
+
+    if (input === null) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (event.repeat && !allowsRepeat(input)) {
+      return;
+    }
+
+    dispatch(input);
   });
 })();

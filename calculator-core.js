@@ -178,7 +178,82 @@
     return { expression: '', current: liveExpression === '' ? '0' : liveExpression };
   }
 
-  const CalculatorCore = { createState, applyInput, render };
+  // The input vocabulary, exported once (D-005 clause 5; recorded in the D-003 API addendum):
+  // KEY-001's key map is the third consumer of the digit/operator/action sets, so it reads them
+  // from here instead of hand-maintaining a third copy. Reuses the exact same tables applyInput
+  // already validates against, so the two can never drift apart. A malformed descriptor (missing
+  // type, unknown value, or an inherited-property name such as "constructor"/"__proto__") is
+  // rejected, never accepted -- this is a check, so it returns false rather than throwing.
+  function isInput(input) {
+    if (input === null || typeof input !== 'object') {
+      return false;
+    }
+    switch (input.type) {
+      case 'number':
+        return isNumberValue(input.value);
+      case 'operator':
+        return OPERATORS.has(input.value);
+      case 'action':
+        return ACTIONS.has(input.value);
+      default:
+        return false;
+    }
+  }
+
+  // Keyboard channel key map (D-005 clauses 1 and 4): a pure allowlist from a physical key to the
+  // same input descriptor a click already produces. event.key is layout- and numpad-normalized
+  // (KEY-001 Context), so no separate numpad branch is needed -- a numpad digit reports the
+  // identical digit string as its top-row counterpart. Comma is an alternate decimal point.
+  const KEY_MAP = new Map([
+    ['0', { type: 'number', value: '0' }],
+    ['1', { type: 'number', value: '1' }],
+    ['2', { type: 'number', value: '2' }],
+    ['3', { type: 'number', value: '3' }],
+    ['4', { type: 'number', value: '4' }],
+    ['5', { type: 'number', value: '5' }],
+    ['6', { type: 'number', value: '6' }],
+    ['7', { type: 'number', value: '7' }],
+    ['8', { type: 'number', value: '8' }],
+    ['9', { type: 'number', value: '9' }],
+    ['.', { type: 'number', value: '.' }],
+    [',', { type: 'number', value: '.' }],
+    ['+', { type: 'operator', value: '+' }],
+    ['-', { type: 'operator', value: '-' }],
+    ['*', { type: 'operator', value: '*' }],
+    ['/', { type: 'operator', value: '/' }],
+    ['x', { type: 'operator', value: '*' }],
+    ['X', { type: 'operator', value: '*' }],
+    ['Enter', { type: 'action', value: 'equals' }],
+    ['=', { type: 'action', value: 'equals' }],
+    ['Backspace', { type: 'action', value: 'delete' }],
+    ['Escape', { type: 'action', value: 'clear' }],
+    ['Delete', { type: 'action', value: 'clear' }],
+  ]);
+
+  // key: the KeyboardEvent.key string. modifiers: { ctrlKey, metaKey, altKey }, all optional and
+  // default false. Ctrl/Meta/Alt make even a mapped key inert (AC-5); Shift is deliberately not
+  // checked here -- it never blocks (the browser itself turns a physical Shift+8 into key '*').
+  // Returns a fresh copy of the descriptor so a caller can never mutate the shared map entry.
+  function mapKey(key, modifiers) {
+    const { ctrlKey = false, metaKey = false, altKey = false } = modifiers || {};
+    if (ctrlKey || metaKey || altKey) {
+      return null;
+    }
+    const mapped = KEY_MAP.get(key);
+    return mapped === undefined ? null : { ...mapped };
+  }
+
+  // Auto-repeat policy (D-005 clause 6, OQ-4): channel-agnostic, so it is pure and core-side
+  // rather than a DOM-layer `if`. Digits, the decimal point and delete keep acting on every
+  // repeat; equals and every operator act once per press and ignore the repeats.
+  function allowsRepeat(input) {
+    if (input.type === 'number') {
+      return true;
+    }
+    return input.type === 'action' && input.value === 'delete';
+  }
+
+  const CalculatorCore = { createState, applyInput, render, mapKey, allowsRepeat, isInput };
 
   // Dual export (D-001, D-003): CommonJS under Node, a global under a plain <script> tag.
   if (typeof module !== 'undefined' && module.exports) {
