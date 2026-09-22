@@ -66,11 +66,19 @@ if ((event.key === 'Enter' || event.key === ' ') && isCalculatorButton(event.tar
 
    | key | repeat | target | behavior | pinned by |
    |---|---|---|---|---|
-   | `Enter` | no | calculator button | adapter returns; browser activates; one action | `keyboard.test.js` "a digit button reached by Tab and activated by Enter…", "the equals button … by Enter…" |
-   | `Enter` | yes | calculator button | `preventDefault()`, return; no activation | `keyboard.test.js` "holding Enter on a Tab focused digit button performs the action once" |
-   | `Space` | no | calculator button | adapter returns; browser activates; one action | `keyboard.test.js` "a digit button reached by Tab and activated by Space…", "…by Space evaluates exactly once" |
-   | `Space` | yes | calculator button | `preventDefault()`, return; no activation | **unpinned** — `arch3` F-1 (a mutation narrowing the guard to `Enter` leaves the suite 47/47 green) |
+   | `Enter` | no | digit / equals button | adapter returns; browser activates; one action | `keyboard.test.js` "a digit button reached by Tab and activated by Enter…", "the equals button … by Enter…" |
+   | `Enter` | yes | digit button | `preventDefault()`, return; no activation | `keyboard.test.js` "holding Enter on a Tab focused digit button performs the action once" (cycle 2) |
+   | `Enter` | yes | operator button | `preventDefault()`, return; no activation | `keyboard.test.js` "holding Enter on a Tab focused operator button performs the action once" (cycle 3, `spyOnDispatches` oracle — display alone is blind here) |
+   | `Enter` | yes | action button (`AC`/`DEL`) | `preventDefault()`, return; no activation | `keyboard.test.js` "the DEL button reached by Tab and activated by a held Enter deletes exactly once" (cycle 4, `r4` F-1: 3 realistic mutants — dropping `data-action` from `isCalculatorButton`, skipping the branch for action buttons, skipping the repeat guard for action buttons — all survived until this row) |
+   | `Space` | no | digit button | adapter returns; browser activates; one action | `keyboard.test.js` "a digit button reached by Tab and activated by Space…", "…by Space evaluates exactly once" |
+   | `Space` | yes | digit button | `preventDefault()`, return; no activation | `keyboard.test.js` "holding Space on a Tab focused digit button performs the action once" (cycle 3, `arch3` F-1 closed) |
    | `Enter`/`Space` | either | anything else | falls through to `mapKey`; `Enter` evaluates, `Space` is inert | AC-5 / AC-7 rows on `document.body`; the *focused non-calculator control* sub-case is a recorded `KEY-001-sec1` Nit |
+
+   Operator and action buttons under `Space` (repeat or not) are covered by the same key-agnostic
+   guard proven for `Enter`, but have no row of their own — a documented, low-risk gap (`arch4` F-1/F-2
+   named this table itself as needing this correction, and flagged that no cell here has a matrix
+   entry in `.agent/units/KEY-001.matrix.md`; both are carried as Known Issues, not fixed, per the
+   unit's standing fix-only-Majors policy).
 
    A future change inside this branch must keep this table true and extend it, rather than reason
    from one example.
