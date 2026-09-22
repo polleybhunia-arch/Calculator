@@ -124,9 +124,13 @@ class Node {
       && this.ownerDocument
       && this.ownerDocument.activeElement === this
     ) {
+      // A keyboard-synthesized activation click carries detail: 0 (D-011 Option A) -- unlike a
+      // real pointer click (detail >= 1, modeled by page.click() below), so the production click
+      // handler can blur a mouse-clicked button without also blurring a Tab-focused one.
       this.dispatchEvent({
         type: 'click',
         bubbles: true,
+        detail: 0,
         defaultPrevented: false,
         _stopped: false,
         preventDefault() { this.defaultPrevented = true; },
@@ -525,12 +529,14 @@ function loadPage(options = {}) {
       return document.markupWrites;
     },
 
-    // Delivers a bubbling click from `target`, like a user click. A real browser focuses the
+    // Delivers a bubbling click from `target`, like a real mouse click. A real browser focuses the
     // clicked element before the click event fires (D-008, matrix item 10), so a blur() inside a
-    // click handler has an observable effect.
+    // click handler has an observable effect. detail: 1 models a real pointer click's click count
+    // (D-011 Option A), distinguishing it from the native-activation click dispatchEvent()
+    // synthesizes above (detail: 0) so the production handler can tell them apart.
     click(target) {
       target.focus();
-      return page.dispatch('click', target);
+      return page.dispatch('click', target, { detail: 1 });
     },
 
     dispatch(type, target, init = {}) {

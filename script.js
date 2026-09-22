@@ -73,7 +73,13 @@
 
     // A clicked button keeps browser focus by default; blurring it here means a following Enter
     // or Space is read as a normal key press, not a native repeat of this same button (AC-6).
-    event.target.blur();
+    // Only a real pointer click should blur: a mouse click reports event.detail >= 1, while the
+    // click the browser synthesizes for a Tab-focused button's native Enter/Space activation (and
+    // a programmatic .click()) reports event.detail === 0 (D-011 Option A). Blurring that click
+    // too would drop a keyboard-only user's Tab position after every single press.
+    if (event.detail > 0) {
+      event.target.blur();
+    }
   });
 
   // The keyboard channel (D-005 clause 3): converts a keydown into the same input descriptor a

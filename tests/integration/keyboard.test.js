@@ -228,11 +228,32 @@ test('Tab never has preventDefault called', () => {
 // --- AC-6 --------------------------------------------------------------------------------------
 
 test('a mouse click blurs its button so a following Enter is read as a normal key not a repeat click', () => {
+  // D-011 Option A, one combined row: a mouse click must blur its button (so the follow-up keys,
+  // routed to whatever is actually focused, land on document.body and are read as plain keys, not
+  // as a repeat of the clicked button); a Tab-focused button's native Enter/Space activation must
+  // NOT blur it (so a keyboard-only user keeps their place in the Tab order). Routing the follow-up
+  // keys to document.activeElement (falling back to document.body) is what makes this row react to
+  // blur() at all -- the previous version always dispatched on document.body regardless of focus,
+  // so it could not fail when blur() was removed (r1 F-1).
   const page = loadPage();
   page.click(page.buttonFor('4'));
-  typeKeys(page, '+ 8 Enter');
+  assert.equal(page.document.activeElement, null, 'a mouse click must blur its button');
+
+  const target = page.document.activeElement || page.document.body;
+  typeKeys(page, '+ 8 Enter', target);
 
   assertDisplay(page.read(), display('4+8', '12'), 'click 4 then keys + 8 Enter must render 4+8 / 12, not 4+84');
+
+  const tabbedPage = loadPage();
+  const seven = tabbedPage.buttonFor('7');
+  seven.focus();
+  tabbedPage.dispatch('keydown', seven, { key: 'Enter', repeat: false });
+
+  assert.equal(
+    tabbedPage.document.activeElement,
+    seven,
+    'a native Enter activation on a Tab-focused button must NOT blur it (mouse-initiated clicks only)',
+  );
 });
 
 test('a digit button reached by Tab and activated by Enter types the digit exactly once', () => {
