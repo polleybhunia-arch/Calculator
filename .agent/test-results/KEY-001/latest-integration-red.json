@@ -1,0 +1,15 @@
+{
+  "unit": "KEY-001",
+  "gate": "integration",
+  "phase": "red",
+  "command": "node --test \"tests/integration/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "2e1f3558db7e8b197c095bb4bcd89646a03da5b5",
+  "dirty": false,
+  "timestamp": "2026-09-22T03:50:49.355Z",
+  "tests": 46,
+  "pass": 27,
+  "fail": 19,
+  "outputTail": "  AssertionError [ERR_ASSERTION]: the non-repeat operator press must dispatch exactly once\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\integration\\keyboard.test.js:358:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at tests\\integration\\keyboard.test.js:368:1\n✖ holding Enter so it repeats does not dispatch again for the extra repeats (1.2817ms)\n  AssertionError [ERR_ASSERTION]: the non-repeat Enter press must dispatch exactly once\n  \n  0 !== 1\n  \n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\integration\\keyboard.test.js:376:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: 0,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+  "passed": false
+}
