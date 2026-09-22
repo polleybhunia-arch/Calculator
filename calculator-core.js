@@ -203,24 +203,13 @@
   // Keyboard channel key map (D-005 clauses 1 and 4): a pure allowlist from a physical key to the
   // same input descriptor a click already produces. event.key is layout- and numpad-normalized
   // (KEY-001 Context), so no separate numpad branch is needed -- a numpad digit reports the
-  // identical digit string as its top-row counterpart. Comma is an alternate decimal point.
+  // identical digit string as its top-row counterpart. The digit/'.' and operator entries are
+  // derived from NUMBER_CHARACTERS and OPERATORS (the same single sources applyInput and isInput
+  // already use), so the keyboard map can never list a value the rest of the core disagrees with.
   const KEY_MAP = new Map([
-    ['0', { type: 'number', value: '0' }],
-    ['1', { type: 'number', value: '1' }],
-    ['2', { type: 'number', value: '2' }],
-    ['3', { type: 'number', value: '3' }],
-    ['4', { type: 'number', value: '4' }],
-    ['5', { type: 'number', value: '5' }],
-    ['6', { type: 'number', value: '6' }],
-    ['7', { type: 'number', value: '7' }],
-    ['8', { type: 'number', value: '8' }],
-    ['9', { type: 'number', value: '9' }],
-    ['.', { type: 'number', value: '.' }],
-    [',', { type: 'number', value: '.' }],
-    ['+', { type: 'operator', value: '+' }],
-    ['-', { type: 'operator', value: '-' }],
-    ['*', { type: 'operator', value: '*' }],
-    ['/', { type: 'operator', value: '/' }],
+    ...[...NUMBER_CHARACTERS].map((char) => [char, { type: 'number', value: char }]),
+    [',', { type: 'number', value: '.' }], // an alternate decimal point
+    ...[...OPERATORS.keys()].map((op) => [op, { type: 'operator', value: op }]),
     ['x', { type: 'operator', value: '*' }],
     ['X', { type: 'operator', value: '*' }],
     ['Enter', { type: 'action', value: 'equals' }],

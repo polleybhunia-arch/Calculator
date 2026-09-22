@@ -56,6 +56,12 @@
     return number !== undefined || operator !== undefined || action !== undefined;
   }
 
+  // The subset of a KeyboardEvent mapKey needs: only Ctrl/Meta/Alt make even a mapped key inert
+  // (AC-5); Shift is never passed because it never blocks.
+  function modifiersOf(event) {
+    return { ctrlKey: event.ctrlKey, metaKey: event.metaKey, altKey: event.altKey };
+  }
+
   updateDisplay();
 
   buttons.addEventListener('click', (event) => {
@@ -80,7 +86,7 @@
       return;
     }
 
-    const input = mapKey(event.key, { ctrlKey: event.ctrlKey, metaKey: event.metaKey, altKey: event.altKey });
+    const input = mapKey(event.key, modifiersOf(event));
 
     if (input === null) {
       return;
