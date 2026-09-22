@@ -4,10 +4,15 @@
 // What it does: parses the real index.html, builds an element tree, runs every
 // <script src> in document order inside ONE node:vm context that defines `document`
 // (and `window`) but no `module`, `exports` or `require`, so a dual-export guard takes
-// the browser branch. Clicks are delivered with bubbling from the target up to `document`.
+// the browser branch. Clicks are delivered with bubbling from the target up to `document`,
+// and focus the clicked element first, like a real browser. `document.activeElement` and
+// `element.focus()`/`blur()` are modeled (D-008), as is a focused <button>'s native default
+// action for an Enter/Space keydown (a click(), suppressible by preventDefault()).
 //
-// What it does NOT model (report as UNVERIFIED, never assume): CSS, layout, focus, real
-// pointer/touch events, real file:// loading, capture-phase listeners, markup parsing.
+// What it does NOT model (report as UNVERIFIED, never assume): CSS, layout, real focus rings,
+// real pointer/touch events, real file:// loading, capture-phase listeners, markup parsing,
+// real OS auto-repeat timing, a real browser's default-action semantics for elements other
+// than <button>.
 //
 // Default-off mutation-probe hook (used by the integration-tester to prove tests bite,
 // never by a normal run): set CALC_STUB_TRANSFORM to a JSON object
@@ -87,6 +92,11 @@ class Node {
   // Bubbles from this node through every ancestor up to `document`, like a browser.
   // Listener exceptions propagate to the caller (a browser would only report them), so a
   // throwing handler fails the test instead of disappearing.
+  //
+  // Native default action (D-008, matrix item 11): a real browser performs a focused button's
+  // default click activation for an Enter/Space keydown once the bubble phase completes,
+  // unless some listener called preventDefault() during the bubble. Modeled here, after the
+  // bubble loop, for a keydown whose target IS document.activeElement and is a <button>.
   dispatchEvent(event) {
     event.target = this;
     const path = [];
@@ -104,6 +114,24 @@ class Node {
       if (event._stopped) {
         break;
       }
+    }
+    if (
+      event.type === 'keydown'
+      && (event.key === 'Enter' || event.key === ' ')
+      && !event.defaultPrevented
+      && this instanceof Element
+      && this.tagName === 'BUTTON'
+      && this.ownerDocument
+      && this.ownerDocument.activeElement === this
+    ) {
+      this.dispatchEvent({
+        type: 'click',
+        bubbles: true,
+        defaultPrevented: false,
+        _stopped: false,
+        preventDefault() { this.defaultPrevented = true; },
+        stopPropagation() { this._stopped = true; },
+      });
     }
     return !event.defaultPrevented;
   }
@@ -161,6 +189,19 @@ class Element extends Node {
 
   hasAttribute(name) {
     return this._attributes.has(name);
+  }
+
+  // Focus tracking (D-008, matrix items 7-9): at most one focused element per document, matching
+  // a real DOM. focus() models "reached by Tab" when called with no preceding click. blur() is a
+  // no-op unless this element currently holds focus (same as a real browser).
+  focus() {
+    this.ownerDocument._activeElement = this;
+  }
+
+  blur() {
+    if (this.ownerDocument._activeElement === this) {
+      this.ownerDocument._activeElement = null;
+    }
   }
 
   // Live view over the data-* attributes: values are strings, a missing key is undefined
@@ -264,6 +305,13 @@ class Document extends Node {
   constructor() {
     super();
     this.markupWrites = [];
+    // Focus tracking (D-008, matrix item 7): nothing is focused until a click or an explicit
+    // focus() call.
+    this._activeElement = null;
+  }
+
+  get activeElement() {
+    return this._activeElement;
   }
 
   get children() {
@@ -477,8 +525,11 @@ function loadPage(options = {}) {
       return document.markupWrites;
     },
 
-    // Delivers a bubbling click from `target`, like a user click.
+    // Delivers a bubbling click from `target`, like a user click. A real browser focuses the
+    // clicked element before the click event fires (D-008, matrix item 10), so a blur() inside a
+    // click handler has an observable effect.
     click(target) {
+      target.focus();
       return page.dispatch('click', target);
     },
 
