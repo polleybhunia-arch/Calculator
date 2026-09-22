@@ -13,6 +13,9 @@ const SCRIPT_FILES = ['script.js', 'calculator-core.js'];
 // Removes // and /* */ comments but keeps string literals intact (so a URL inside a string is
 // still scanned). Known limitation: a regex literal that contains a quote or // would confuse
 // it; neither shipped script uses one.
+// TODO(D-009, KEY-001 sub-step 2): this is the pre-fix version, kept only long enough to run the
+// RED confirmation for the new stripComments regression row; the real fix follows in this same
+// sub-step, before anything is committed.
 function stripComments(source) {
   let out = '';
   let quote = null;
@@ -49,6 +52,13 @@ function stripComments(source) {
   return out;
 }
 
+// Removes <!-- ... --> HTML comments before a security scan runs over raw markup, so descriptive
+// prose written in a future HTML comment can never trigger (or hide) a pattern match (D-009). No
+// other HTML parsing is done.
+function stripHtmlComments(html) {
+  return html.replace(/<!--[\s\S]*?-->/g, '');
+}
+
 // A missing shipped file FAILS the test (never skips): AC-7 covers all three files.
 function readShipped(name) {
   const file = path.join(REPO_ROOT, name);
@@ -56,16 +66,21 @@ function readShipped(name) {
   return fs.readFileSync(file, 'utf8');
 }
 
-// Reads all three shipped files. `code` holds the comment-stripped JS, `html` the raw markup.
+// Reads all three shipped files. `code` holds the comment-stripped JS, `html` the raw markup,
+// `htmlCode` the markup with <!-- --> HTML comments stripped (D-009) for the same pattern scans
+// that run over the two script files.
 function readAllShipped() {
   const html = readShipped('index.html');
+  const htmlCode = stripHtmlComments(html);
   const code = {};
   const raw = {};
   for (const name of SCRIPT_FILES) {
     raw[name] = readShipped(name);
     code[name] = stripComments(raw[name]);
   }
-  return { html, code, raw };
+  return {
+    html, htmlCode, code, raw,
+  };
 }
 
 const PATTERNS = {
@@ -114,5 +129,5 @@ const isRelativeReference = (ref) => !/^[a-z][a-z0-9+.-]*:/i.test(ref) && !ref.s
 
 module.exports = {
   PATTERNS, SCRIPT_FILES, SHIPPED_FILES, REPO_ROOT,
-  stripComments, readShipped, readAllShipped, findMatches, findModuleScriptTags, findReferences, isRelativeReference,
+  stripComments, stripHtmlComments, readShipped, readAllShipped, findMatches, findModuleScriptTags, findReferences, isRelativeReference,
 };
