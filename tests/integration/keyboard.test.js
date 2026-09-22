@@ -421,3 +421,43 @@ test('holding Enter on a Tab focused digit button performs the action once', () 
 
   assertDisplay(page.read(), display('', '7'), 'a held Enter on a Tab-focused digit button must type the digit exactly once, not on every repeat');
 });
+
+test('holding Space on a Tab focused digit button performs the action once', () => {
+  // r3 F-1 / D-013 row 4 ("Space, repeat, calculator button"): the row above pins the Enter half
+  // of the cycle-3 fix, but narrowing the guard to `event.repeat && event.key === 'Enter'`
+  // (dropping the Space case) left the whole 72-test suite green while a held Space on a
+  // Tab-focused digit button rendered 777, not 7 -- an asymmetric gap, since AC-6 already names
+  // Space explicitly and the non-repeat Space activation row already exists.
+  const page = loadPage();
+  const seven = page.buttonFor('7');
+  seven.focus();
+
+  page.dispatch('keydown', seven, { key: ' ', repeat: false });
+  page.dispatch('keydown', seven, { key: ' ', repeat: true });
+  page.dispatch('keydown', seven, { key: ' ', repeat: true });
+
+  assertDisplay(page.read(), display('', '7'), 'a held Space on a Tab-focused digit button must type the digit exactly once, not on every repeat');
+});
+
+test('holding Enter on a Tab focused operator button performs the action once', () => {
+  // r3 F-2 / D-013 row 2: the "regardless of input type" guarantee -- the precise reason the
+  // D-012-shaped narrowing (`event.repeat && event.target.dataset.number !== undefined`, i.e.
+  // digit buttons only) was rejected -- is unpinned by any row using a non-digit button. That
+  // narrowing leaves the suite green while a held Enter on a focused operator button fires 3
+  // dispatches instead of 1. The display alone cannot see it (an operator-swap that rewrites the
+  // trail with an identical glyph is idempotent), which is exactly why this row uses the same
+  // spyOnDispatches oracle as the existing operator/equals repeat rows.
+  const page = loadPage();
+  typeKeys(page, '9');
+  const plus = page.buttonFor('+');
+  plus.focus();
+  const spy = spyOnDispatches(page.document.getElementById('display-current'));
+  const before = spy.count();
+
+  page.dispatch('keydown', plus, { key: 'Enter', repeat: false });
+  page.dispatch('keydown', plus, { key: 'Enter', repeat: true });
+  page.dispatch('keydown', plus, { key: 'Enter', repeat: true });
+
+  assert.equal(spy.count(), before + 1, 'a held Enter on a Tab-focused operator button must dispatch exactly once, not on every repeat');
+  assertDisplay(page.read(), display('', '9+'), 'display must stay 9+ throughout the repeats');
+});
