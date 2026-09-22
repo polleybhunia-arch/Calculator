@@ -461,3 +461,22 @@ test('holding Enter on a Tab focused operator button performs the action once', 
   assert.equal(spy.count(), before + 1, 'a held Enter on a Tab-focused operator button must dispatch exactly once, not on every repeat');
   assertDisplay(page.read(), display('', '9+'), 'display must stay 9+ throughout the repeats');
 });
+
+test('the DEL button reached by Tab and activated by a held Enter deletes exactly once', () => {
+  // r4 F-1 / D-013 row "Enter, yes, action button": the digit- and operator-button rows above pin
+  // the "native activation acts exactly once" guarantee for two of the three button families, but
+  // no existing row focuses an action button (AC/DEL) -- unlike digit and operator buttons, Enter
+  // on an action button is not degenerate (it maps to `equals` through mapKey, not to `clear`/
+  // `delete`), so this is the one family where the guard's absence is user-visible on the display
+  // alone: without it, a held Enter on a Tab-focused DEL evaluates "123" via = instead of deleting.
+  const page = loadPage();
+  typeKeys(page, '1 2 3');
+  const del = page.buttonFor('DEL');
+  del.focus();
+
+  page.dispatch('keydown', del, { key: 'Enter', repeat: false });
+  page.dispatch('keydown', del, { key: 'Enter', repeat: true });
+  page.dispatch('keydown', del, { key: 'Enter', repeat: true });
+
+  assertDisplay(page.read(), display('', '12'), 'a held Enter on a Tab-focused DEL button must delete exactly once, not on every repeat');
+});
