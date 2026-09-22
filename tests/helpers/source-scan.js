@@ -10,15 +10,21 @@ const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const SHIPPED_FILES = ['index.html', 'script.js', 'calculator-core.js'];
 const SCRIPT_FILES = ['script.js', 'calculator-core.js'];
 
-// Removes // and /* */ comments but keeps string literals intact (so a URL inside a string is
-// still scanned). Known limitation: a regex literal that contains a quote or // would confuse
-// it; neither shipped script uses one.
-// TODO(D-009, KEY-001 sub-step 2): this is the pre-fix version, kept only long enough to run the
-// RED confirmation for the new stripComments regression row; the real fix follows in this same
-// sub-step, before anything is committed.
+// Removes // and /* */ comments but keeps string literals and regex literals intact (D-009): a
+// `/` is treated as the start of a regex literal only when the previous significant character
+// indicates an operand is expected next (an operator, opening bracket, comma, colon, semicolon,
+// or the very start of the file) -- the same rule real JS tokenizers use to tell `/` division
+// from `/regex/`. Without this, a regex literal such as /https?:\/\// was read as a line comment
+// starting at its embedded `//`, discarding the rest of the line -- a false negative that could
+// hide a following eval( or innerHTML= on the same line (BOOT-001-sec1 F-2). Known limitation: a
+// `/` immediately after a keyword like `return` or `typeof` is still read as division, not regex;
+// neither shipped script does this.
+const OPERAND_EXPECTED_AFTER = /[([{,;:=&|!?+\-*%^~<>]/;
+
 function stripComments(source) {
   let out = '';
   let quote = null;
+  let lastSignificant = '';
   let i = 0;
   while (i < source.length) {
     const c = source[i];
@@ -30,7 +36,7 @@ function stripComments(source) {
         i += 2;
         continue;
       }
-      if (c === quote) quote = null;
+      if (c === quote) { quote = null; lastSignificant = c; }
       i += 1;
       continue;
     }
@@ -44,8 +50,28 @@ function stripComments(source) {
       const end = source.indexOf('*/', i + 2);
       i = end === -1 ? source.length : end + 2;
       out += ' ';
+    } else if (c === '/' && (lastSignificant === '' || OPERAND_EXPECTED_AFTER.test(lastSignificant))) {
+      // Regex literal: consume verbatim up to an unescaped closing slash, respecting [...]
+      // classes, so an embedded // or /* is never mistaken for a comment marker.
+      let j = i + 1;
+      let inClass = false;
+      while (j < source.length) {
+        const cj = source[j];
+        if (cj === '\\') { j += 2; continue; }
+        if (cj === '\n') break;
+        if (cj === '[') { inClass = true; j += 1; continue; }
+        if (cj === ']') { inClass = false; j += 1; continue; }
+        if (cj === '/' && !inClass) { j += 1; break; }
+        j += 1;
+      }
+      out += source.slice(i, j);
+      lastSignificant = '/';
+      i = j;
     } else {
       out += c;
+      if (!/\s/.test(c)) {
+        lastSignificant = c;
+      }
       i += 1;
     }
   }
