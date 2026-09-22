@@ -1,0 +1,15 @@
+{
+  "unit": "KEY-001",
+  "gate": "integration",
+  "phase": "green",
+  "command": "node --test \"tests/integration/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "7bb4380ce8476aef53822f7e63605ed62108b26a",
+  "dirty": false,
+  "timestamp": "2026-09-22T03:38:03.072Z",
+  "tests": 22,
+  "pass": 22,
+  "fail": 0,
+  "outputTail": "✔ shows Error on the page for each operator button that resolves a divide-by-zero (13.4513ms)\n✔ starts a new calculation on the page when a digit is clicked after an operator-resolved Error (2.5009ms)\n✔ shows an empty expression line and 0 when the page loads (7.428ms)\n✔ runs every script tag of index.html in document order without module syntax (4.4396ms)\n✔ loads calculator-core.js before script.js in index.html (0.5494ms)\n✔ wires every digit button 0 to 9 to the main line (4.1412ms)\n✔ ignores a second decimal point typed through the buttons (2.204ms)\n✔ shows the display symbol for each operator button (5.3806ms)\n✔ AC clears an unfinished chain, a result and an Error (4.2252ms)\n✔ DEL removes the last typed digit (1.4407ms)\n✔ DEL right after an operator clears the whole calculation on the page (1.2777ms)\n✔ DEL on Error clears it on the page (1.6876ms)\n✔ a second operator press replaces the first on the page (1.215ms)\n✔ equals with no pending operator changes nothing on the page (2.0256ms)\n✔ equals right after an operator uses the held value as the second operand on the page (1.3902ms)\n✔ a digit after a result starts a new calculation on the page (2.1045ms)\n✔ an operator after Error clears first and starts from 0 on the page (1.6716ms)\n✔ leading zeros are replaced and a zero before a point is kept on the page (2.5783ms)\n✔ a decimal point after an operator starts 0. in the next operand on the page (1.2989ms)\n✔ clicking the button container outside any button changes nothing (1.2407ms)\n✔ updates the display through textContent without writing markup (1.1101ms)\n✔ treats a button data attribute containing markup as inert text (1.0759ms)\nℹ tests 22\nℹ suites 0\nℹ pass 22\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 159.7397\n",
+  "passed": true
+}
