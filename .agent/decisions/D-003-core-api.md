@@ -108,3 +108,25 @@ throw. The 19 integration rows exercise every real button, so drift between the 
   (OQ-7, human action before gate 8). Until then the implementer ran `node --check calculator-core.js` by hand.
 - Behavior of malformed descriptors is pinned only by one unit test; the DOM-level effect (ignored click)
   is pinned by the integration rows for the `.buttons` container and the markup-bearing `data-number`.
+
+## Addendum (`KEY-001`): `mapKey`, `allowsRepeat`, `isInput`
+
+`KEY-001` adds three entry points to `calculator-core.js`, exercising AC-1's "at least three" allowance
+and closing `D-005` clause 5 (the third consumer of the input vocabulary must read it from a single
+export, never a third hand-maintained table). Names and shapes were the implementer's choice per the
+`KEY-001-05` dispatch; recorded here rather than in a new file because they extend this same API, not a
+new boundary.
+
+| Name | Signature | Role |
+|---|---|---|
+| `isInput` | `(input) -> boolean` | The single exported input vocabulary (`D-005` clause 5, "e.g. `INPUT_VALUES`/`isInput(descriptor)`" — this implementation chose the descriptor-checking function form). Accepts a full `{ type, value }` descriptor, not a bare value, so a value valid for one type (`'clear'`) is not wrongly accepted for another (`{ type: 'number', value: 'clear' }` is rejected). Reuses `isNumberValue`/`OPERATORS`/`ACTIONS` — the exact tables `applyInput` already validates against — so the two can never drift apart. Never throws; a malformed descriptor returns `false`. `script.js`'s `inputFromElement` now calls this instead of keeping its own `NUMBER_CHARACTERS`/`OPERATOR_VALUES`/`ACTION_VALUES` copies. |
+| `mapKey` | `(key, modifiers) -> descriptor \| null` | The keyboard channel's key map (`D-005` clauses 1, 3, 4; unit Context). `key` is a `KeyboardEvent.key` string. `modifiers` is `{ ctrlKey, metaKey, altKey }` (all optional, default `false`); any of the three held makes even a mapped key return `null`. `shiftKey` is deliberately not a parameter — Shift never blocks (the browser itself turns a physical `Shift+8` into `key: '*'`). A closed allowlist (`KEY_MAP`, a `Map`): unmapped keys, `undefined`, and `''` all return `null`, never throw. Returns a fresh copy of the matched descriptor so a caller cannot mutate the shared map entry. |
+| `allowsRepeat` | `(input) -> boolean` | The auto-repeat policy (`D-005` clause 6, OQ-4). Pure and channel-agnostic: `true` for `type: 'number'` and for the `'delete'` action; `false` for every operator and for `'equals'`. The `'clear'` action is untested either way (matrix "Not covered": clear is idempotent, so no test can discriminate a choice) — this implementation returns `false` for it, a safe default. The DOM layer calls this only when `event.repeat` is `true`; a non-repeat keydown always dispatches regardless of this function's answer. |
+
+### Consequences / residual risk (addendum)
+- `isInput` and `applyInput`'s own per-type checks are two call sites over the same three tables, not a
+  fourth copy — verified by two dedicated unit rows (`tests/unit/key-map.test.js`: the vocabulary-export
+  row and the key-map-output-consistency row).
+- `script.js` keeps exactly one value-vocabulary source now (`CalculatorCore.isInput`); the DOM layer's
+  only remaining local knowledge is *which* `data-*` attribute maps to which `type`, which is inherent to
+  reading markup, not a duplicated value list.
