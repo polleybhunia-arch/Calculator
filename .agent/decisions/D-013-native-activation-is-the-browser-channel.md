@@ -117,13 +117,33 @@ if ((event.key === 'Enter' || event.key === ' ') && isCalculatorButton(event.tar
   referent is `D-012`, a record whose headline is a rejection, so the next reader must reconstruct
   the argument from a refutation — the same situation that let the `Space` half ship unpinned.
 
+## Coverage basis (added cycle 5, arch5): axis-complete, not cell-complete
+This branch has two independent axes: **key** (`Enter`/`Space`) and **target family** (digit /
+operator / equals / action). Cycles 2-4 each discriminated one axis independently — the repeat
+guard is unconditional on target family (cycle 2's fix), and separately proven to fire for every
+family tested (cycles 3-4 each added one family). The one surviving mutant across all five cycles
+of probing (`arch5`, M8: suppress `Space` only for digit buttons) special-cases **both** axes at
+once, which no plausible incremental simplification of the shipped code does — the guard as written
+has no branch that could produce that shape by accident. **This is the stopping rule for this
+branch**: coverage is complete when every axis is independently discriminated by at least one test,
+not when every cell of the full cross-product has its own row. The two remaining open cells
+(operator and action buttons under held `Space`) stay a documented Known Issue, not a blocking gap,
+under this rule.
+
 ## Consequences / residual risk
 - Adopting this record requires **no code change and no new commit** to the product files: it
-  documents shipped behavior at `fc93ff7a`. It does not affect the SHA-bound gate or review evidence.
-- Open follow-ups it names, none blocking `KEY-001`: the unpinned held-`Space` cell (`arch3` F-1, one
-  integration row ≈16 lines); the two missing matrix rows and one stale matrix note (`arch3` F-3);
-  the manual-checklist line "hold `Space` on a `Tab`-focused button — it must act once, not zero
-  times".
+  documents shipped behavior at `fc93ff7a` (case-set table) and `8c36740a` (coverage-basis clause
+  above and this correction). It does not affect the SHA-bound gate or review evidence.
+- Corrected 2026-09-23 (`r5` F-1, `arch5` F-1 — both cycle-5 findings that this section had gone
+  stale exactly like the case-set table did in cycle 4): the held-`Space`-on-digit-button cell was
+  closed at `c0e1281e` (cycle 3) and is **not** an open follow-up; the held-`Enter`-on-action-button
+  cell was closed at `8c36740a` (cycle 4) and is likewise not open. The only genuinely open cells are
+  operator and action buttons under held `Space` (per the coverage-basis clause above, a documented
+  Known Issue, not a blocker). Four tests across cycles 2-4 have no row in
+  `.agent/units/KEY-001.matrix.md`, and that matrix's own `preventDefault` note is now inaccurate —
+  carried as a Known Issue (`r4` F-3, `r5` F-2, `arch5` F-2), not fixed, consistent with this unit's
+  standing fix-only-Majors policy; a matrix update belongs to `test-designer`, not to a decision
+  record.
 - `D-012`'s stated trigger is now moot: AC-7 no longer depends on the invariant that every
   non-repeatable input is idempotent in the state that follows it, so the common next feature
   "repeated `=` re-applies the last operation" carries no hidden trap on the native-activation
