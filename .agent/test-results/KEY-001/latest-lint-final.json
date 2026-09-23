@@ -1,0 +1,15 @@
+{
+  "unit": "KEY-001",
+  "gate": "lint",
+  "phase": "final",
+  "command": "node --check script.js && node --check calculator-core.js",
+  "exitCode": 0,
+  "head": "8c36740af901c680ee4305fcbb0684222201777d",
+  "dirty": false,
+  "timestamp": "2026-09-22T13:16:58.775Z",
+  "tests": null,
+  "pass": null,
+  "fail": null,
+  "outputTail": "",
+  "passed": true
+}

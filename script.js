@@ -1,185 +1,119 @@
-// Calculator state
-let currentInput = '0';        // value of the operand currently being typed
-let previousInput = null;      // operand stored before an operator was chosen
-let operator = null;           // pending operator: '+', '-', '*', '/'
-let resetOnNextInput = false;  // true right after choosing an operator (next digit starts a new number)
-let history = [];              // committed tokens (typed numbers + operator symbols) for the expression trail
-let justCalculated = false;    // true right after "=" until a new number/operator is entered
-let lastExpression = '';       // the full expression shown on the small line after "="
+// DOM layer only: reads the page, turns button clicks into core inputs, writes the display with
+// textContent. All calculator behavior lives in calculator-core.js, loaded before this file.
+(function () {
+  'use strict';
 
-const operatorSymbols = {
-  '+': '+',
-  '-': '−',
-  '*': '×',
-  '/': '÷',
-};
+  const { createState, applyInput, render, mapKey, allowsRepeat, isInput } = globalThis.CalculatorCore;
 
-const expressionDisplay = document.getElementById('display-expression');
-const currentDisplay = document.getElementById('display-current');
-const buttons = document.querySelector('.buttons');
+  const expressionDisplay = document.getElementById('display-expression');
+  const currentDisplay = document.getElementById('display-current');
+  const buttons = document.querySelector('.buttons');
 
-updateDisplay();
+  let state = createState();
 
-buttons.addEventListener('click', (event) => {
-  const button = event.target;
+  function updateDisplay() {
+    const { expression, current } = render(state);
+    expressionDisplay.textContent = expression;
+    currentDisplay.textContent = current;
+  }
 
-  if (button.dataset.number !== undefined) {
-    appendNumber(button.dataset.number);
-  } else if (button.dataset.operator !== undefined) {
-    chooseOperator(button.dataset.operator);
-  } else if (button.dataset.action === 'clear') {
-    clearAll();
-  } else if (button.dataset.action === 'delete') {
-    deleteLastDigit();
-  } else if (button.dataset.action === 'equals') {
-    equals();
+  // The single entry point: every input, whatever its source, goes through here.
+  function dispatch(input) {
+    state = applyInput(state, input);
+    updateDisplay();
+  }
+
+  // Returns the core input for a clicked element, or null when the click is not on a
+  // recognized button (a gap between buttons, or a value outside the allowed sets). Attribute
+  // precedence (number, then operator, then action) is unchanged; validity now comes from the
+  // core's single exported vocabulary check (D-005 clause 5) instead of a hand-duplicated table.
+  function inputFromElement(element) {
+    const { number, operator, action } = element.dataset;
+
+    if (number !== undefined) {
+      const input = { type: 'number', value: number };
+      return isInput(input) ? input : null;
+    }
+    if (operator !== undefined) {
+      const input = { type: 'operator', value: operator };
+      return isInput(input) ? input : null;
+    }
+    if (action !== undefined) {
+      const input = { type: 'action', value: action };
+      return isInput(input) ? input : null;
+    }
+    return null;
+  }
+
+  // True when `element` is one of the calculator's own buttons (has a recognized data-* input
+  // attribute), whether or not its value is valid. Used to let a Tab-focused button keep native
+  // Enter/Space activation instead of also being handled by the keydown listener below (AC-6).
+  function isCalculatorButton(element) {
+    if (!element || !element.dataset) {
+      return false;
+    }
+    const { number, operator, action } = element.dataset;
+    return number !== undefined || operator !== undefined || action !== undefined;
+  }
+
+  // The subset of a KeyboardEvent mapKey needs: only Ctrl/Meta/Alt make even a mapped key inert
+  // (AC-5); Shift is never passed because it never blocks.
+  function modifiersOf(event) {
+    return { ctrlKey: event.ctrlKey, metaKey: event.metaKey, altKey: event.altKey };
   }
 
   updateDisplay();
-});
 
-function appendNumber(number) {
-  // A fresh number after a result or an error starts a brand new calculation
-  if (currentInput === 'Error' || justCalculated) {
-    clearAll();
-  }
+  buttons.addEventListener('click', (event) => {
+    const input = inputFromElement(event.target);
 
-  // Start a fresh number after an operator
-  if (resetOnNextInput) {
-    currentInput = '0';
-    resetOnNextInput = false;
-  }
+    if (input !== null) {
+      dispatch(input);
+    }
 
-  // Avoid multiple decimal points in one number
-  if (number === '.' && currentInput.includes('.')) {
-    return;
-  }
+    // A clicked button keeps browser focus by default; blurring it here means a following Enter
+    // or Space is read as a normal key press, not a native repeat of this same button (AC-6).
+    // Only a real pointer click should blur: a mouse click reports event.detail >= 1, while the
+    // click the browser synthesizes for a Tab-focused button's native Enter/Space activation (and
+    // a programmatic .click()) reports event.detail === 0 (D-011 Option A). Blurring that click
+    // too would drop a keyboard-only user's Tab position after every single press.
+    if (event.detail > 0) {
+      event.target.blur();
+    }
+  });
 
-  // Replace a lone leading zero, except when typing "0."
-  if (currentInput === '0' && number !== '.') {
-    currentInput = number;
-  } else {
-    currentInput += number;
-  }
-}
-
-function chooseOperator(nextOperator) {
-  if (currentInput === 'Error') {
-    clearAll();
-  }
-
-  if (justCalculated) {
-    // Continue the next calculation from the previous result
-    history = [currentInput];
-    justCalculated = false;
-  } else if (resetOnNextInput) {
-    // Pressed an operator again without typing a number: swap it instead of appending
-    history[history.length - 1] = operatorSymbols[nextOperator];
-    operator = nextOperator;
-    return;
-  } else {
-    history.push(currentInput);
-  }
-
-  // Chain calculations: resolve the pending operation before starting the next one
-  if (operator !== null) {
-    computeResult();
-  }
-
-  history.push(operatorSymbols[nextOperator]);
-  previousInput = currentInput;
-  operator = nextOperator;
-  resetOnNextInput = true;
-}
-
-// Resolves previousInput <operator> currentInput into currentInput. Used both
-// for mid-expression chaining and as the final step of equals().
-function computeResult() {
-  if (operator === null || previousInput === null) {
-    return;
-  }
-
-  const a = parseFloat(previousInput);
-  const b = parseFloat(currentInput);
-  let result;
-
-  switch (operator) {
-    case '+':
-      result = a + b;
-      break;
-    case '-':
-      result = a - b;
-      break;
-    case '*':
-      result = a * b;
-      break;
-    case '/':
-      if (b === 0) {
-        currentInput = 'Error';
-        previousInput = null;
-        operator = null;
-        resetOnNextInput = true;
+  // The keyboard channel (D-005 clause 3): converts a keydown into the same input descriptor a
+  // click already produces and calls the same dispatch(input) -- never a second display-write
+  // path, never a synthesized button.click().
+  document.addEventListener('keydown', (event) => {
+    if ((event.key === 'Enter' || event.key === ' ') && isCalculatorButton(event.target)) {
+      // A button reached by Tab keeps its native Enter/Space activation (a click through the
+      // handler above); handling it here too would fire two actions from one keypress (AC-6).
+      // A held key auto-repeats this same keydown, and the browser would natively re-activate the
+      // button on every repeat -- unconditionally, regardless of what input the button represents
+      // (a digit button is deliberately repeatable through the document-level channel below, but
+      // that is a different channel from a focused button's native activation, D-012 rejected,
+      // r2 F-1). preventDefault() suppresses that repeat activation so the button still acts
+      // exactly once per physical press.
+      if (event.repeat) {
+        event.preventDefault();
         return;
       }
-      result = a / b;
-      break;
-    default:
       return;
-  }
+    }
 
-  // Trim floating-point noise (e.g. 0.1 + 0.2)
-  currentInput = String(Math.round(result * 1e10) / 1e10);
-  previousInput = null;
-  operator = null;
-  resetOnNextInput = true;
-}
+    const input = mapKey(event.key, modifiersOf(event));
 
-function equals() {
-  if (operator === null || previousInput === null) {
-    return;
-  }
+    if (input === null) {
+      return;
+    }
 
-  // Capture the full typed expression before computeResult() overwrites currentInput
-  const fullExpression = history.join('') + currentInput;
+    event.preventDefault();
 
-  computeResult();
+    if (event.repeat && !allowsRepeat(input)) {
+      return;
+    }
 
-  lastExpression = fullExpression;
-  history = [];
-  justCalculated = true;
-}
-
-function deleteLastDigit() {
-  if (resetOnNextInput || currentInput === 'Error') {
-    clearAll();
-    return;
-  }
-
-  currentInput = currentInput.slice(0, -1);
-  if (currentInput === '' || currentInput === '-') {
-    currentInput = '0';
-  }
-}
-
-function clearAll() {
-  currentInput = '0';
-  previousInput = null;
-  operator = null;
-  resetOnNextInput = false;
-  history = [];
-  justCalculated = false;
-  lastExpression = '';
-}
-
-function updateDisplay() {
-  if (justCalculated) {
-    // Two-line result view: expression trail on top, bold answer below
-    expressionDisplay.textContent = lastExpression;
-    currentDisplay.textContent = currentInput;
-  } else {
-    // Live view: growing expression trail on the main line while typing
-    expressionDisplay.textContent = '';
-    const liveExpression = history.join('') + (resetOnNextInput ? '' : currentInput);
-    currentDisplay.textContent = liveExpression === '' ? '0' : liveExpression;
-  }
-}
+    dispatch(input);
+  });
+})();

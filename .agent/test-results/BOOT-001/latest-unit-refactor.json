@@ -1,0 +1,15 @@
+{
+  "unit": "BOOT-001",
+  "gate": "unit",
+  "phase": "refactor",
+  "command": "node --test \"tests/unit/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "23cab89add8eb1311281a01307682e8f7f114973",
+  "dirty": false,
+  "timestamp": "2026-09-21T13:34:03.671Z",
+  "tests": 52,
+  "pass": 52,
+  "fail": 0,
+  "outputTail": "✔ ignores a second decimal point in the same operand (0.2742ms)\n✔ builds decimal operands with a leading zero (0.4162ms)\n✔ starts the next operand with 0. after an operator even when the held value has a decimal point (0.6587ms)\n✔ keeps a trailing decimal point in the trail (0.2978ms)\n✔ renders Error when dividing by zero (0.178ms)\n✔ starts a brand-new calculation when a digit follows Error (0.2872ms)\n✔ treats every zero-valued divisor as zero (0.246ms)\n✔ divides zero by a non-zero number without Error (0.1638ms)\n✔ renders Error when the last step of a chain divides by zero (0.1696ms)\n✔ clears Error and starts from 0 when an operator follows Error (0.2343ms)\n✔ ignores a repeated equals while Error is shown (0.16ms)\n✔ clears Error with AC (0.2452ms)\n✔ clears Error with DEL (0.3496ms)\n✔ continues from a result so 21 then +5= renders 21+5 and 26 (0.3801ms)\n✔ continues again from a second result (0.2552ms)\n✔ replaces the pending operator instead of appending (0.3222ms)\n✔ uses the last chosen operator after a replacement (0.1723ms)\n✔ applies a replaced operator to the running result of a chain (0.1783ms)\n✔ replaces the operator chosen right after a result (0.1457ms)\n✔ uses 0 as the left operand when an operator is the first input (0.3564ms)\n✔ starts a new calculation when a digit follows a result (0.1816ms)\n✔ starts 0. when a decimal point follows a decimal result (0.2793ms)\n✔ AC clears the pending operator, the trail and the result (0.3509ms)\n✔ DEL removes the last typed character including a decimal point (0.569ms)\n✔ DEL on the last remaining digit or on a fresh state leaves 0 (0.4755ms)\n✔ DEL in the second operand changes only that operand (0.4314ms)\n✔ DEL right after an operator clears the whole calculation (0.3093ms)\n✔ DEL after a result clears the result and the expression line (0.1843ms)\n✔ ignores equals when no operator is pending (0.3704ms)\n✔ uses the held value as the second operand when equals follows an operator (0.3508ms)\n✔ ignores a second equals after a result (0.1471ms)\nℹ tests 52\nℹ suites 0\nℹ pass 52\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 160.8726\n",
+  "passed": true
+}

@@ -1,0 +1,15 @@
+{
+  "unit": "BOOT-001",
+  "gate": "lint",
+  "phase": "final",
+  "command": "node --check script.js && node --check calculator-core.js",
+  "exitCode": 0,
+  "head": "28a19873b0c03224e111afb30e44829c919c9945",
+  "dirty": false,
+  "timestamp": "2026-09-21T14:28:24.111Z",
+  "tests": null,
+  "pass": null,
+  "fail": null,
+  "outputTail": "",
+  "passed": true
+}

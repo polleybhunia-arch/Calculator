@@ -1,0 +1,15 @@
+{
+  "unit": "KEY-001",
+  "gate": "regression",
+  "phase": "red",
+  "command": "node --test \"tests/regression/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "2e1f3558db7e8b197c095bb4bcd89646a03da5b5",
+  "dirty": false,
+  "timestamp": "2026-09-22T03:50:52.693Z",
+  "tests": 25,
+  "pass": 19,
+  "fail": 6,
+  "outputTail": "    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n\ntest at tests\\regression\\keyboard-and-click-parity.test.js:169:1\n✖ README documents every mapped key with its calculator action (0.8454ms)\n  AssertionError [ERR_ASSERTION]: README: no heading or bullet mentions keyboard\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\regression\\keyboard-and-click-parity.test.js:172:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: null,\n    expected: null,\n    operator: 'notStrictEqual',\n    diff: 'simple'\n  }\n\ntest at tests\\regression\\keyboard-and-click-parity.test.js:205:1\n✖ README Features lists keyboard support (0.8371ms)\n  AssertionError [ERR_ASSERTION]: README: no Features bullet mentions keyboard (bullets: [\"- Live expression display — see the full expression (e.g. `4+8+9`) as you type\",\"- On pressing `=`, the expression is shown above the answer in a smaller, dimmed\",\"- Chained calculations (e.g. `4+8+9=` evaluates left to right)\",\"- Continue from a previous result by pressing an operator right after `=`\",\"- Decimal point support and floating-point rounding (e.g. `0.1 + 0.2`)\",\"- Division-by-zero shows `Error` as soon as the division is evaluated, including in the middle of a chain (e.g. `5 ÷ 0 +`)\",\"- Responsive layout for small screens\"])\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\regression\\keyboard-and-click-parity.test.js:208:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n",
+  "passed": false
+}

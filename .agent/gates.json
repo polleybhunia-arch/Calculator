@@ -5,7 +5,7 @@
     "unit": { "command": "node --test \"tests/unit/**/*.test.js\"", "min_tests": 1 },
     "integration": { "command": "node --test \"tests/integration/**/*.test.js\"", "min_tests": 1 },
     "regression": { "command": "node --test \"tests/regression/**/*.test.js\"", "min_tests": 1 },
-    "lint": { "command": "node --check script.js" },
+    "lint": { "command": "node --check script.js && node --check calculator-core.js" },
     "typecheck": { "na": "plain JavaScript, no type checker in a zero-dependency project (D-001)" },
     "build": { "na": "no build step; index.html loads script.js directly (D-001)" }
   }

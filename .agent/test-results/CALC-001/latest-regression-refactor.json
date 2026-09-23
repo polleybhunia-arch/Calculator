@@ -1,0 +1,15 @@
+{
+  "unit": "CALC-001",
+  "gate": "regression",
+  "phase": "refactor",
+  "command": "node --test \"tests/regression/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "44b7a92bd8f7bba9667d6281ac73b312f997cde9",
+  "dirty": false,
+  "timestamp": "2026-09-21T18:39:30.703Z",
+  "tests": 17,
+  "pass": 16,
+  "fail": 1,
+  "outputTail": "✔ shipped scripts contain no innerHTML, outerHTML or insertAdjacentHTML (18.6069ms)\n✔ index.html and scripts reference no third-party or CDN host (23.56ms)\nℹ tests 17\nℹ suites 0\nℹ pass 16\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3002.4919\n\n✖ failing tests:\n\ntest at tests\\regression\\divide-by-zero.test.js:71:1\n✖ README divide-by-zero bullet says Error shows as soon as the division is evaluated, also mid-chain (27.8119ms)\n  AssertionError [ERR_ASSERTION]: README: the divide-by-zero bullet is missing the example 5 ÷ 0 +; a mention of chain; as soon as / immediately / at once. Bullet text: \"- Division-by-zero shows `Error`\"\n  + actual - expected\n  \n  + [\n  +   'the example 5 ÷ 0 +',\n  +   'a mention of chain',\n  +   'as soon as / immediately / at once'\n  + ]\n  - []\n  \n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\regression\\divide-by-zero.test.js:81:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: [ 'the example 5 ÷ 0 +', 'a mention of chain', 'as soon as / immediately / at once' ],\n    expected: [],\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+  "passed": false
+}

@@ -1,0 +1,15 @@
+{
+  "unit": "KEY-001",
+  "gate": "integration",
+  "phase": "green",
+  "command": "node --test \"tests/integration/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "74565b787de4d837fd0523243227eab1f2cddc46",
+  "dirty": true,
+  "timestamp": "2026-09-22T12:09:37.832Z",
+  "tests": 47,
+  "pass": 47,
+  "fail": 0,
+  "outputTail": "✔ an operator after Error clears first and starts from 0 on the page (1.3812ms)\n✔ leading zeros are replaced and a zero before a point is kept on the page (2.6872ms)\n✔ a decimal point after an operator starts 0. in the next operand on the page (1.3467ms)\n✔ clicking the button container outside any button changes nothing (1.5216ms)\n✔ updates the display through textContent without writing markup (1.5568ms)\n✔ treats a button data attribute containing markup as inert text (1.4059ms)\n✔ typing four plus eight plus nine then Enter renders the same result as the equivalent clicks (6.5446ms)\n✔ typing a decimal chain through keys renders zero point three like the click path (1.6337ms)\n✔ a second decimal point key within the same number is ignored through the keyboard (1.6043ms)\n✔ the comma key is accepted as an alternate decimal point through the keyboard (1.7851ms)\n✔ each operator key including x X and the slash key renders the matching display symbol (7.503ms)\n✔ the Backspace key removes the last typed digit like the DEL button (1.8059ms)\n✔ the Escape key clears the display from an unfinished chain and from an Error (2.6462ms)\n✔ the Delete key also clears the display like Escape (1.265ms)\n✔ an unmapped key leaves the display and preventDefault untouched (6.9819ms)\n✔ a mapped key held with Ctrl Meta or Alt is inert and does not call preventDefault (2.2652ms)\n✔ Shift alone does not block a mapped key on the page (2.237ms)\n✔ a mapped modifier free key calls preventDefault exactly once (1.7809ms)\n✔ Tab never has preventDefault called (1.2623ms)\n✔ a mouse click blurs its button so a following Enter is read as a normal key not a repeat click (2.4714ms)\n✔ a digit button reached by Tab and activated by Enter types the digit exactly once (1.3424ms)\n✔ a digit button reached by Tab and activated by Space types the digit exactly once (2.1742ms)\n✔ the equals button reached by Tab and activated by Enter evaluates exactly once (2.516ms)\n✔ the equals button reached by Tab and activated by Space evaluates exactly once (2.4612ms)\n✔ clicking a synthetic button with an out of range data operator value changes nothing and throws nothing (5.7985ms)\n✔ clicking a synthetic button with an out of range data action value changes nothing and throws nothing (2.8427ms)\n✔ holding a digit key so it repeats types the digit on every repeat (1.2387ms)\n✔ holding Backspace so it repeats deletes on every repeat (1.1339ms)\n✔ holding an operator key so it repeats does not dispatch again for the extra repeats (1.1788ms)\n✔ holding Enter so it repeats does not dispatch again for the extra repeats (1.2275ms)\n✔ holding Enter on a Tab focused digit button performs the action once (1.6653ms)\nℹ tests 47\nℹ suites 0\nℹ pass 47\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 180.5252\n",
+  "passed": true
+}

@@ -1,0 +1,15 @@
+{
+  "unit": "KEY-001",
+  "gate": "unit",
+  "phase": "red",
+  "command": "node --test \"tests/unit/**/*.test.js\"",
+  "exitCode": 1,
+  "head": "fa16dfa320c95ab94b717927b04717fd8d5eee4d",
+  "dirty": false,
+  "timestamp": "2026-09-22T04:07:22.770Z",
+  "tests": 83,
+  "pass": 69,
+  "fail": 14,
+  "outputTail": "    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: TypeError: mapKey is not a function\n        at C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\key-map.test.js:132:29\n        at getActual (node:assert:611:5)\n        at strict.doesNotThrow (node:assert:779:32)\n        at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\key-map.test.js:132:10)\n        at Test.runInAsyncScope (node:async_hooks:227:14)\n        at Test.run (node:internal/test_runner/test:1306:25)\n        at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n        at Test.postRun (node:internal/test_runner/test:1447:19)\n        at Test.run (node:internal/test_runner/test:1372:12)\n        at async Test.processPendingSubtests (node:internal/test_runner/test:897:7),\n    expected: undefined,\n    operator: 'doesNotThrow',\n    diff: 'simple'\n  }\n\ntest at tests\\unit\\key-map.test.js:142:1\n✖ the core auto repeat policy allows repetition for number and delete inputs (1.7281ms)\n  TypeError: allowsRepeat is not a function\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\key-map.test.js:143:16)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7)\n\ntest at tests\\unit\\key-map.test.js:148:1\n✖ the core auto repeat policy blocks repetition for equals and every operator input (2.7517ms)\n  TypeError: allowsRepeat is not a function\n      at TestContext.<anonymous> (C:\\Users\\User\\Documents\\Calculator\\tests\\unit\\key-map.test.js:149:16)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1306:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:897:18)\n      at Test.postRun (node:internal/test_runner/test:1447:19)\n      at Test.run (node:internal/test_runner/test:1372:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:897:7)\n",
+  "passed": false
+}

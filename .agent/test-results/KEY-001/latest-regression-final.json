@@ -1,0 +1,15 @@
+{
+  "unit": "KEY-001",
+  "gate": "regression",
+  "phase": "final",
+  "command": "node --test \"tests/regression/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "8c36740af901c680ee4305fcbb0684222201777d",
+  "dirty": false,
+  "timestamp": "2026-09-22T13:16:54.731Z",
+  "tests": 25,
+  "pass": 25,
+  "fail": 0,
+  "outputTail": "✔ README division by zero shows Error also when an operator resolves it (161.6909ms)\n✔ README division by zero shows Error also in the middle of a longer chain (71.9826ms)\n✔ README Error recovery works after a divide-by-zero resolved by an operator (41.1047ms)\n✔ README divide-by-zero bullet says Error shows as soon as the division is evaluated, also mid-chain (60.2032ms)\n✔ every README click sequence still renders correctly once the keyboard listener and click blur are installed (1099.5054ms)\n✔ keyboard chain four plus eight plus nine Enter matches the same sequence performed with clicks (118.5265ms)\n✔ keyboard mid chain divide by zero five slash zero plus matches the click result and a following digit starts fresh on both (145.702ms)\n✔ keyboard continue from result then plus five equals matches the click path (125.569ms)\n✔ Ctrl+R is inert and never calls preventDefault leaving the calculator state untouched (72.91ms)\n✔ README documents every mapped key with its calculator action (164.3153ms)\n✔ README Features lists keyboard support (520.5751ms)\n✔ README live trail shows the whole expression 4+8+9 while typing (459.8753ms)\n✔ README equals shows the expression on the small line and the result below (114.1321ms)\n✔ README chained calculations evaluate left to right (120.7688ms)\n✔ README operator right after equals continues from the result (165.7548ms)\n✔ README decimal point support adds decimal operands (69.5529ms)\n✔ README floating-point rounding trims noise and limits decimals (139.6399ms)\n✔ README division by zero shows Error (57.621ms)\n✔ baseline Error recovery starts a fresh calculation on the next digit (83.6403ms)\n✔ shipped scripts contain no import or export statement (333.7201ms)\n✔ index.html contains no script of type module (79.5701ms)\n✔ shipped scripts contain no eval, new Function or document.write (69.1761ms)\n✔ shipped scripts contain no innerHTML, outerHTML or insertAdjacentHTML (24.4692ms)\n✔ index.html and scripts reference no third-party or CDN host (42.8452ms)\n✔ stripComments does not hide code following a regex literal containing a double slash (2.8851ms)\nℹ tests 25\nℹ suites 0\nℹ pass 25\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4813.8856\n",
+  "passed": true
+}

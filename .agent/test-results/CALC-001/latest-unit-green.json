@@ -1,0 +1,15 @@
+{
+  "unit": "CALC-001",
+  "gate": "unit",
+  "phase": "green",
+  "command": "node --test \"tests/unit/**/*.test.js\"",
+  "exitCode": 0,
+  "head": "e0dd8fbaab34ebb8fb5b6b40c6fe1e4d6b6ab5cf",
+  "dirty": false,
+  "timestamp": "2026-09-21T18:32:33.547Z",
+  "tests": 67,
+  "pass": 67,
+  "fail": 0,
+  "outputTail": "✔ replaces the pending operator instead of appending (19.3616ms)\n✔ uses the last chosen operator after a replacement (4.9443ms)\n✔ applies a replaced operator to the running result of a chain (6.0373ms)\n✔ replaces the operator chosen right after a result (4.0624ms)\n✔ uses 0 as the left operand when an operator is the first input (11.873ms)\n✔ starts a new calculation when a digit follows a result (3.6712ms)\n✔ starts 0. when a decimal point follows a decimal result (17.7748ms)\n✔ AC clears the pending operator, the trail and the result (6.2237ms)\n✔ DEL removes the last typed character including a decimal point (6.499ms)\n✔ DEL on the last remaining digit or on a fresh state leaves 0 (9.3823ms)\n✔ DEL in the second operand changes only that operand (4.7829ms)\n✔ DEL right after an operator clears the whole calculation (7.2021ms)\n✔ DEL after a result clears the result and the expression line (3.1779ms)\n✔ ignores equals when no operator is pending (6.3425ms)\n✔ uses the held value as the second operand when equals follows an operator (6.3676ms)\n✔ ignores a second equals after a result (3.8613ms)\n✔ shows Error at once when an operator press resolves 5 divided by 0 (32.066ms)\n✔ leaves the earlier state unchanged when an operator press resolves a divide-by-zero (2.4821ms)\n✔ shows Error at once for each of the four operators pressed after 5 divided by 0 (4.4269ms)\n✔ shows the whole typed chain and Error when an operator resolves a divide-by-zero at the end of a chain (18.7363ms)\n✔ shows Error when an operator resolves 0 divided by 0 (5.6673ms)\n✔ treats a divisor typed as 0.0 as zero when an operator resolves it (2.3184ms)\n✔ treats a divisor typed as 0. as zero when an operator resolves it (4.1652ms)\n✔ shows Error when an operator resolves a divide-by-zero after continuing from a result (21.5165ms)\n✔ starts a new calculation when a digit follows a divide-by-zero resolved by an operator (43.7619ms)\n✔ starts from 0 when an operator follows a divide-by-zero resolved by an operator (4.2024ms)\n✔ clears a divide-by-zero resolved by an operator with AC (2.1901ms)\n✔ clears a divide-by-zero resolved by an operator with DEL (35.4681ms)\n✔ ignores equals after an operator resolved a divide-by-zero (3.2765ms)\n✔ keeps chaining when an operator resolves a non-division with a zero operand (4.3244ms)\n✔ keeps chaining when an operator resolves a division by a non-zero number (2.9413ms)\nℹ tests 67\nℹ suites 0\nℹ pass 67\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3536.5603\n",
+  "passed": true
+}
